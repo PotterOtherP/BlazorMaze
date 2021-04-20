@@ -2,9 +2,9 @@ const SVG_NAMESPACE = "http://www.w3.org/2000/svg";
 const SVG_WIDTH = 1204;
 const SVG_HEIGHT = 900;
 const CH_WALL = 'X';
-const CH_SPACE = '-';
+const CH_SPACE = "-";
 
-function drawHorizontal(x, y, length, thickness, color)
+function DrawHorizontal(x, y, length, thickness, color)
 {
     let el = document.createElementNS(SVG_NAMESPACE, "rect");
     let svg = document.getElementById("mazeSVG");
@@ -20,7 +20,7 @@ function drawHorizontal(x, y, length, thickness, color)
 
 }
 
-function drawVertical(x, y, length, thickness, color)
+function DrawVertical(x, y, length, thickness, color)
 {
     let el = document.createElementNS(SVG_NAMESPACE, "rect");
     let svg = document.getElementById("mazeSVG");
@@ -36,11 +36,7 @@ function drawVertical(x, y, length, thickness, color)
 
 }
 
-function HelloMaze() {
-    console.log("Hello from the maze JS file");
-}
-
-function paintBackground(color) {
+function PaintBackground(color) {
 
     let el = document.createElementNS(SVG_NAMESPACE, "rect");
     let svg = document.getElementById("mazeSVG");
@@ -60,30 +56,43 @@ function paintBackground(color) {
 
 }
 
-function paintMaze(gridString, spaceColorString, wallColorString) {
+function GetMazeGridFromString(gridString) {
 
     let grid = [];
 
-    for (var i = 0; i < gridString.length; ++i)
+    var j = 0;
+    grid.push([]);
+
+    for (var i = 0; i < gridString.length - 1; ++i)
     {
         if (gridString[i] == '|')
+        {
             grid.push([]);
+            ++j;
+        }
+
+        else if (gridString[i] == CH_SPACE || gridString[i] == CH_WALL)
+        {
+            grid[j].push(gridString[i]);
+        }
     }
 
+    return grid;
 
-    console.log("Hello from paintMaze");
-    console.log(grid);
+}
 
-    return;
+function PaintMaze(gridString, spaceColorString, wallColorString) {
+
+    let grid = GetMazeGridFromString(gridString);
 
     let rows = grid.length;
     let columns = grid[0].length;
     let rowPixels = SVG_HEIGHT / rows;
     let columnPixels = SVG_WIDTH / columns;
-
+    
     let svg = document.getElementById("mazeSVG");
     svg.innerHTML = "";
-    paintBackground(spaceColorString);
+    PaintBackground(spaceColorString);
 
     // Horizontal wall sections
     for (let i = 0; i < rows; ++i)
@@ -94,7 +103,7 @@ function paintMaze(gridString, spaceColorString, wallColorString) {
 
         for (let j = 0; j < columns; ++j)
         {
-            if (this.mazeGrid[i][j] == CH_WALL)
+            if (grid[i][j] == CH_WALL)
             {
                 if (sectionLength == 0)
                     sectionX = j * columnPixels;
@@ -102,11 +111,11 @@ function paintMaze(gridString, spaceColorString, wallColorString) {
                 ++sectionLength;
             }
 
-            if (this.mazeGrid[i][j] != CH_WALL || j == columns - 1)
+            if (grid[i][j] != CH_WALL || j == columns - 1)
             {
                 if (sectionLength > 1)
                 {
-                    this.drawHorizontal(sectionX, sectionY, sectionLength * columnPixels, rowPixels, wallColorString);
+                    DrawHorizontal(sectionX, sectionY, sectionLength * columnPixels, rowPixels, wallColorString);
                 }
 
                 sectionLength = 0;
@@ -123,7 +132,7 @@ function paintMaze(gridString, spaceColorString, wallColorString) {
 
         for (let j = 0; j < rows; ++j)
         {
-            if (this.mazeGrid[j][i] == CH_WALL)
+            if (grid[j][i] == CH_WALL)
             {
                 if (sectionLength == 0)
                     sectionY = j * rowPixels;
@@ -131,11 +140,11 @@ function paintMaze(gridString, spaceColorString, wallColorString) {
                 ++sectionLength;
             }
 
-            if (this.mazeGrid[j][i] != CH_WALL || j == rows - 1)
+            if (grid[j][i] != CH_WALL || j == rows - 1)
             {
                 if (sectionLength > 1)
                 {
-                    this.drawVertical(sectionX, sectionY, sectionLength * rowPixels, columnPixels, wallColorString);
+                    DrawVertical(sectionX, sectionY, sectionLength * rowPixels, columnPixels, wallColorString);
                 } 
 
                 sectionLength = 0;

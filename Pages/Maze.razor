@@ -54,31 +54,32 @@
     private string MazeWelcome = "Welcome to the maze game in C#! " 
      + "Click on the arena or \"Generate New\" to create a new maze.";
 
+
+    private bool firstMazeCreated = false;
     private string gridString;
     private string spaceColorString;
     private string wallColorString;
     private const int SVG_WIDTH = 1204;
     private const int SVG_HEIGHT = 900;
 
-    private void ChangeString() {
-
-        MazeWelcome = "The string changed in the C# code...";
-    }
-
     private async void CreateMaze() {
 
-        var newMaze = new MazeGrid();
+        int complexity = 5;
+        var newMaze = new MazeGrid(complexity);
         newMaze.InitMaze();
         newMaze.GenerateMaze();
+
+        firstMazeCreated = true;
 
         gridString = newMaze.ToString();
         spaceColorString = newMaze.spaceColor.ToString();
         wallColorString = newMaze.wallColor.ToString();
 
-        Console.WriteLine(gridString);
+        Console.WriteLine();
+        newMaze.PrintMazeToConsole();
+        Console.WriteLine();
 
-        @* await JS.InvokeVoidAsync("HelloMaze"); *@
-        await JS.InvokeVoidAsync("paintMaze", gridString, spaceColorString, wallColorString);
+        await JS.InvokeVoidAsync("PaintMaze", gridString, spaceColorString, wallColorString);
 
     }
 }

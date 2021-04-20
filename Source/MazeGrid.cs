@@ -3,8 +3,8 @@ using System.Collections.Generic;
 
 public class MazeGrid
 {
-    public static readonly int COMPLEXITY_DEFAULT = 5;
-    public static readonly int COMPLEXITY_MIN = 3;
+    public static readonly int COMPLEXITY_DEFAULT = 7;
+    public static readonly int COMPLEXITY_MIN = 5;
     public static readonly int COMPLEXITY_MAX = 61;
     public static readonly int MAX_ITERATIONS = 50000;
     public readonly int BRANCH_PERCENT = 10;
