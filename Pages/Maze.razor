@@ -1,4 +1,6 @@
 @page "/maze"
+@inject IJSRuntime JS;
+
 
 <h1>Maze Generator</h1>
 
@@ -8,7 +10,7 @@
     xmlns:xlink="http://www.w3.org/1999/xlink"
     xmlns:ev="http://www.w3.org/2001/sml-events"
     id="mazeSVG"
-    viewBox = "0 0 1204 900">
+    viewBox = "0 0 @SVG_WIDTH @SVG_HEIGHT">
     <rect x="0" y="0" width="602" height="450" fill="#cfdfd9"/>
     <rect x="602" y="0" width="602" height="450" fill="#afafa9"/>
     <rect x="0" y="450" width="602" height="450" fill="#c2d2d2"/>
@@ -52,16 +54,31 @@
     private string MazeWelcome = "Welcome to the maze game in C#! " 
      + "Click on the arena or \"Generate New\" to create a new maze.";
 
+    private string gridString;
+    private string spaceColorString;
+    private string wallColorString;
+    private const int SVG_WIDTH = 1204;
+    private const int SVG_HEIGHT = 900;
+
     private void ChangeString() {
 
         MazeWelcome = "The string changed in the C# code...";
     }
 
-    private void CreateMaze() {
+    private async void CreateMaze() {
 
         var newMaze = new MazeGrid();
         newMaze.InitMaze();
         newMaze.GenerateMaze();
-        newMaze.PrintMazeToConsole();
+
+        gridString = newMaze.ToString();
+        spaceColorString = newMaze.spaceColor.ToString();
+        wallColorString = newMaze.wallColor.ToString();
+
+        Console.WriteLine(gridString);
+
+        @* await JS.InvokeVoidAsync("HelloMaze"); *@
+        await JS.InvokeVoidAsync("paintMaze", gridString, spaceColorString, wallColorString);
+
     }
 }

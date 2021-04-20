@@ -5,6 +5,7 @@
     Layout = null;
 }
 
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -17,7 +18,9 @@
     <link href="css/maze.css" rel="stylesheet" />
     <link href="css/w3.css" rel="stylesheet" />
     <link href="BlazorMaze.styles.css" rel="stylesheet" />
+    <script src="js/maze.js"></script>
 </head>
+
 <body>
     <component type="typeof(App)" render-mode="ServerPrerendered" />
 
@@ -33,5 +36,15 @@
     </div>
 
     <script src="_framework/blazor.server.js"></script>
+
+    <script type="text/javascript">
+
+        function SayHello()
+        {
+            console.log("Hello from Host.cshtml javascript");
+        }
+
+    </script>
+    
 </body>
 </html>
