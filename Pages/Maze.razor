@@ -69,13 +69,13 @@
         spaceColorString = newMaze.spaceColor.ToString();
         wallColorString = newMaze.wallColor.ToString();
 
-        await JS.InvokeVoidAsync("SetMaze", gridString, newMaze.complexity);
-        await JS.InvokeVoidAsync("PaintMaze", spaceColorString, wallColorString);
+        await JS.InvokeVoidAsync("setMaze", gridString, newMaze.complexity);
+        await JS.InvokeVoidAsync("paintMaze", spaceColorString, wallColorString);
 
         if (!firstMazeCreated)
         {
             firstMazeCreated = true;
-            await JS.InvokeVoidAsync("ActivateButtons");
+            await JS.InvokeVoidAsync("activateButtons");
         }
 
     }
