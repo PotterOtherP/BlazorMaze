@@ -64,7 +64,7 @@
 
     private async void CreateMaze() {
 
-        int complexity = 5;
+        int complexity = 7;
         var newMaze = new MazeGrid(complexity);
         newMaze.InitMaze();
         newMaze.GenerateMaze();
@@ -79,7 +79,8 @@
         newMaze.PrintMazeToConsole();
         Console.WriteLine();
 
-        await JS.InvokeVoidAsync("PaintMaze", gridString, spaceColorString, wallColorString);
+        await JS.InvokeVoidAsync("SetMaze", gridString, newMaze.complexity);
+        await JS.InvokeVoidAsync("PaintMaze", spaceColorString, wallColorString);
 
     }
 }
