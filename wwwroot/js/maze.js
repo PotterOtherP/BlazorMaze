@@ -29,6 +29,14 @@ var Maze = {
 
 };
 
+function ActivateButtons() {
+
+    document.getElementById("button_solve").removeAttribute("disabled");
+    document.getElementById("button_solution").removeAttribute("disabled");
+    document.getElementById("button_race").removeAttribute("disabled");
+
+}
+
 function DrawHorizontal(x, y, length, thickness, color)
 {
     let el = document.createElementNS(SVG_NAMESPACE, "rect");

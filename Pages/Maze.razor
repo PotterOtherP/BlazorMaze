@@ -42,9 +42,7 @@
     <button class="w3-button w3-green w3-round-large" id="button_solve" disabled="true">Solve - Player</button>
     <button class="w3-button w3-blue w3-round-large" id="button_solution" disabled="true">Show Solution</button>
     <button class="w3-button w3-red w3-round-large" id="button_race" disabled="true">Race</button>
-    <!-- <button class="w3-button w3-purple w3-round-large" id="button_convert" disabled="true">Convert</button> -->
-    <button class="w3-button w3-black w3-round-large" id="button_save" disabled="true" style="display: none;">Save Image</button>
-    <!-- <button class="w3-button w3-brown w3-round-large" id="button_grid" disabled="true">Show Grid</button> -->
+    @* <button class="w3-button w3-black w3-round-large" id="button_save" disabled="true" style="display: none;">Save Image</button> *@
     
 </div>
 
@@ -53,8 +51,6 @@
 @code {
     private string MazeWelcome = "Welcome to the maze game in C#! " 
      + "Click on the arena or \"Generate New\" to create a new maze.";
-
-
     private bool firstMazeCreated = false;
     private string gridString;
     private string spaceColorString;
@@ -69,18 +65,18 @@
         newMaze.InitMaze();
         newMaze.GenerateMaze();
 
-        firstMazeCreated = true;
-
         gridString = newMaze.ToString();
         spaceColorString = newMaze.spaceColor.ToString();
         wallColorString = newMaze.wallColor.ToString();
 
-        Console.WriteLine();
-        newMaze.PrintMazeToConsole();
-        Console.WriteLine();
-
         await JS.InvokeVoidAsync("SetMaze", gridString, newMaze.complexity);
         await JS.InvokeVoidAsync("PaintMaze", spaceColorString, wallColorString);
+
+        if (!firstMazeCreated)
+        {
+            firstMazeCreated = true;
+            await JS.InvokeVoidAsync("ActivateButtons");
+        }
 
     }
 }
