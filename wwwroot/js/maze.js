@@ -22,7 +22,10 @@ var Maze = {
     wall_left: 0,
     wall_top: 0,
     wall_right: 0,
-    wall_bottom: 0
+    wall_bottom: 0,
+
+    rowPixels: 0,
+    columnPixels: 0
 
 };
 
@@ -80,11 +83,6 @@ function PaintBackground(color) {
 
 function PaintMaze(spaceColorString, wallColorString) {
 
-    let rows = Maze.grid.length;
-    let columns = Maze.grid[0].length;
-    let rowPixels = SVG_HEIGHT / Maze.rows;
-    let columnPixels = SVG_WIDTH / Maze.columns;
-    
     let svg = document.getElementById("mazeSVG");
     svg.innerHTML = "";
     PaintBackground(spaceColorString);
@@ -94,14 +92,14 @@ function PaintMaze(spaceColorString, wallColorString) {
     {
         let sectionLength = 0;
         let sectionX = 0;
-        let sectionY = i * rowPixels;
+        let sectionY = i * Maze.rowPixels;
 
         for (let j = 0; j < Maze.columns; ++j)
         {
             if (Maze.grid[i][j] == CH_WALL)
             {
                 if (sectionLength == 0)
-                    sectionX = j * columnPixels;
+                    sectionX = j * Maze.columnPixels;
 
                 ++sectionLength;
             }
@@ -110,7 +108,12 @@ function PaintMaze(spaceColorString, wallColorString) {
             {
                 if (sectionLength > 1)
                 {
-                    DrawHorizontal(sectionX, sectionY, sectionLength * columnPixels, rowPixels, wallColorString);
+                    DrawHorizontal(
+                        sectionX,
+                        sectionY,
+                        sectionLength * Maze.columnPixels,
+                        Maze.rowPixels,
+                        wallColorString);
                 }
 
                 sectionLength = 0;
@@ -122,7 +125,7 @@ function PaintMaze(spaceColorString, wallColorString) {
     for (let i = 0; i < Maze.columns; ++i)
     {
         let sectionLength = 0;
-        let sectionX = i * columnPixels;
+        let sectionX = i * Maze.columnPixels;
         let sectionY = 0;
 
         for (let j = 0; j < Maze.rows; ++j)
@@ -130,7 +133,7 @@ function PaintMaze(spaceColorString, wallColorString) {
             if (Maze.grid[j][i] == CH_WALL)
             {
                 if (sectionLength == 0)
-                    sectionY = j * rowPixels;
+                    sectionY = j * Maze.rowPixels;
 
                 ++sectionLength;
             }
@@ -139,7 +142,12 @@ function PaintMaze(spaceColorString, wallColorString) {
             {
                 if (sectionLength > 1)
                 {
-                    DrawVertical(sectionX, sectionY, sectionLength * rowPixels, columnPixels, wallColorString);
+                    DrawVertical(
+                        sectionX,
+                        sectionY,
+                        sectionLength * Maze.rowPixels,
+                        Maze.columnPixels,
+                        wallColorString);
                 } 
 
                 sectionLength = 0;
@@ -168,13 +176,16 @@ function SetMaze(gridString, complexity) {
             Maze.grid[j].push(gridString[i]);
         }
     }
-    
+
     Maze.complexity = complexity;
     Maze.rows = complexity % 2 == 1 ? complexity * 3 : (complexity * 3) + 1;
     Maze.columns = (complexity * 4) + 1;
 
     Maze.wall_right = Maze.columns - 1;
     Maze.wall_bottom = Maze.rows - 1;
+
+    Maze.rowPixels = SVG_HEIGHT / Maze.rows;
+    Maze.columnPixels = SVG_WIDTH / Maze.columns;
 
     for (var i = 0; i < Maze.grid[0].length; ++i)
     {
