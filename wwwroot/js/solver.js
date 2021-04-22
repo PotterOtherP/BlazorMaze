@@ -1,9 +1,4 @@
-const MAX_SOLUTION_ITERATIONS = 50000;
-const COLOR_RED = "#d01010";
-const COLOR_GREEN = "#10d010";
-const COLOR_BLUE = "#1010d0";
-const COLOR_YELLOW = "#d0d010";
-const COLOR_WHITE = "#ffffff";
+
 
 class Solver {
 

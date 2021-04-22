@@ -3,6 +3,15 @@ const SVG_WIDTH = 1204;
 const SVG_HEIGHT = 900;
 const CH_WALL = 'X';
 const CH_SPACE = "-";
+const MAX_SOLUTION_ITERATIONS = 50000;
+const COLOR_RED = "#d01010";
+const COLOR_GREEN = "#10d010";
+const COLOR_BLUE = "#1010d0";
+const COLOR_YELLOW = "#d0d010";
+const COLOR_WHITE = "#ffffff";
+const COLOR_PLAYER = "ff1493";
+const COLOR_PLAYER_TIP = "00ffff";
+
 
 let raceTimer = 0;
 let solution = null;
@@ -41,6 +50,10 @@ function activateButtons() {
     document.getElementById("button_solve").removeAttribute("disabled");
     document.getElementById("button_solution").removeAttribute("disabled");
     document.getElementById("button_race").removeAttribute("disabled");
+
+    document.getElementById("button_solve").addEventListener("click", playerSolve);
+    document.getElementById("button_solution").addEventListener("click", computerSolve);
+    document.getElementById("button_race").addEventListener("click", beginRace);
 
 }
 
@@ -131,7 +144,7 @@ function drawPlayer() {
 
     el.setAttribute("points", pointsStr);
     el.setAttribute("fill", "none");
-    el.setAttribute("stroke", playerColor.getCode());
+    el.setAttribute("stroke", COLOR_PLAYER);
     el.setAttribute("stroke-width", Maze.columnPixels);
     el.setAttribute("id", "playerPL");
     svg.appendChild(el);
@@ -141,7 +154,7 @@ function drawPlayer() {
     el_tip1.setAttribute("cx", t1_x);
     el_tip1.setAttribute("cy", t1_y);
     el_tip1.setAttribute("r", Maze.columnPixels / 2);
-    el_tip1.setAttribute("fill", playerColor.getCode());
+    el_tip1.setAttribute("fill", COLOR_PLAYER);
     el_tip1.setAttribute("id", "player_t1");
     svg.appendChild(el_tip1);
 
@@ -150,7 +163,7 @@ function drawPlayer() {
     el_tip2.setAttribute("cx", t2_x);
     el_tip2.setAttribute("cy", t2_y);
     el_tip2.setAttribute("r", Maze.columnPixels / 2);
-    el_tip2.setAttribute("fill", playerTipColor.getCode());
+    el_tip2.setAttribute("fill", COLOR_PLAYER_TIP);
     el_tip2.setAttribute("id", "player_t2");
     svg.appendChild(el_tip2);
 
@@ -315,6 +328,9 @@ function paintBackground(color) {
 
 function paintMaze(spaceColorString, wallColorString) {
 
+    if (solutionVisible)
+        solutionVisible = false;
+
     let svg = document.getElementById("mazeSVG");
     svg.innerHTML = "";
     paintBackground(spaceColorString);
@@ -391,9 +407,7 @@ function paintMaze(spaceColorString, wallColorString) {
 function playerSolve() {
 
     setText("Use arrow keys to solve the maze.");
-    player = new WallPath(Maze.startX, Maze.startY);
-    playerColor = new ColorRGB(255, 20, 147);
-    playerTipColor = new ColorRGB(0, 255, 255);
+    player = new Player(Maze.startX, Maze.startY);
     player.grow();
 
     // window.addEventListener("mousemove", mouse, true);
