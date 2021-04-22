@@ -9,9 +9,14 @@ const COLOR_GREEN = "#10d010";
 const COLOR_BLUE = "#1010d0";
 const COLOR_YELLOW = "#d0d010";
 const COLOR_WHITE = "#ffffff";
-const COLOR_PLAYER = "ff1493";
-const COLOR_PLAYER_TIP = "00ffff";
+const COLOR_PLAYER = "#ff1493";
+const COLOR_PLAYER_TIP = "#00ffff";
 
+const MAZE_WELCOME = "Welcome to the maze game in C#! " 
+     + "Click on the arena or \"Generate New\" to create a new maze.";
+
+
+const RACE_IN_PROGRESS = "Race currently in progress.";
 
 let raceTimer = 0;
 let solution = null;
@@ -73,7 +78,7 @@ function beginRace() {
 
     else
     {
-        console.log("Race currently in progress");
+        // console.log("Race currently in progress");
         setText("Race currently in progress");
     }
 }
@@ -154,7 +159,7 @@ function drawPlayer() {
     el_tip1.setAttribute("cx", t1_x);
     el_tip1.setAttribute("cy", t1_y);
     el_tip1.setAttribute("r", Maze.columnPixels / 2);
-    el_tip1.setAttribute("fill", COLOR_PLAYER);
+    el_tip1.setAttribute("fill", COLOR_PLAYER_TIP);
     el_tip1.setAttribute("id", "player_t1");
     svg.appendChild(el_tip1);
 
@@ -443,13 +448,19 @@ function race() {
         if (sol2.isSolved()) sol2.draw();
 
         raceInProgress = false;
+        setText(MAZE_WELCOME);
         document.getElementById("button_solve").removeAttribute("disabled");
     }
 
 }
 
-function setMaze(gridString, complexity) {
+function setMaze(gridString, complexity, spaceColorString, wallColorString) {
 
+    if (raceInProgress) 
+    {
+        setText(RACE_IN_PROGRESS);
+        return;
+    }
     Maze.grid = [];
 
     var j = 0;
@@ -493,6 +504,8 @@ function setMaze(gridString, complexity) {
             Maze.exitY = Maze.rows - 1;
         }
     }
+
+    paintMaze(spaceColorString, wallColorString);
 
 }
 
