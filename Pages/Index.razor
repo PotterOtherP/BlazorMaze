@@ -1,7 +1,119 @@
 @page "/"
 
-<h1>Hello, world!</h1>
+@inject IJSRuntime JS;
 
-Welcome to your new app.
 
-<SurveyPrompt Title="How is Blazor working for you?" />
+<h1>Maze Generator</h1>
+
+<div style="display: flex; flex-direction: flex-row;">
+
+<svg xmlns="http://www.w3.org/2000/svg"
+    xmlns:xlink="http://www.w3.org/1999/xlink"
+    xmlns:ev="http://www.w3.org/2001/sml-events"
+    id="mazeSVG"
+    viewBox = "0 0 @SVG_WIDTH @SVG_HEIGHT"
+    @onclick="CreateMaze">
+    <rect x="0" y="0" width="602" height="450" fill="#cfdfd9"/>
+    <rect x="602" y="0" width="602" height="450" fill="#afafa9"/>
+    <rect x="0" y="450" width="602" height="450" fill="#c2d2d2"/>
+    <rect x="602" y="450" width="602" height="450" fill="#a2a2a2"/>
+
+    @* <rect x="0" y="0" width="1204" height="900" fill="#cfdfd9"/> *@
+
+
+    <line x1="0" y1="0" x2="0" y2="900" stroke="black" stroke-width="12"/>
+    <line x1="1204" y1="0" x2="1204" y2="900" stroke="black" stroke-width="12"/>
+    <line x1="0" y1="0" x2="1204" y2="0" stroke="black" stroke-width="6"/>
+    <line x1="0" y1="900" x2="1204" y2="900" stroke="black" stroke-width="6"/>
+
+</svg>
+
+<div id="maze-info">
+<div id="maze-text">@MazeWelcome</div>
+    <select class="w3-select w3-border" name="complex-select"
+    id="complexity-select" style="margin-bottom: 10px"
+    @bind="complexitySelect">
+        <option value=9 disabled selected>Choose difficulty level</option>
+        <option value=5 id="lvl1">Level 1</option>
+        <option value=9 id="lvl2">Level 2</option>
+        <option value=17 id="lvl3">Level 3</option>
+        <option value=27 id="lvl4">Level 4</option>
+        <option value=35 id="lvl5">Level 5</option>
+        <option value=61 id="lvl6">Level 6</option>
+    </select>
+
+    <button class="w3-button w3-khaki w3-round-large" id="button_generate" @onclick="CreateMaze">Generate New</button>
+    <button class="w3-button w3-green w3-round-large" id="button_solve" disabled="true">Solve - Player</button>
+    <button class="w3-button w3-blue w3-round-large" id="button_solution" disabled="true">Show Solution</button>
+    <button class="w3-button w3-red w3-round-large" id="button_race" disabled="true" @onclick="Race">Race</button>
+    @* <button class="w3-button w3-black w3-round-large" id="button_save" disabled="true" style="display: none;">Save Image</button> *@
+    
+</div>
+
+</div>
+
+@code {
+    private string MazeWelcome = "Welcome to the maze game in C#! " 
+     + "Click on the arena or \"Generate New\" to create a new maze.";
+    private string Loading = "Creating maze...";
+    private bool firstMazeCreated = false;
+    private bool raceInProgress = false;
+    private string gridString;
+    private string spaceColorString;
+    private string wallColorString;
+    private const int SVG_WIDTH = 1204;
+    private const int SVG_HEIGHT = 900;
+    private int complexitySelect;
+
+
+    private async void CreateMaze() {
+
+        if (raceInProgress)
+        {
+            await JS.InvokeVoidAsync("terminateRace");
+            raceInProgress = false;
+        }
+
+        if (complexitySelect > 20)
+        {
+            await JS.InvokeVoidAsync("paintBackground", "#eeeeee");
+            await JS.InvokeVoidAsync("setText", Loading);
+        }
+
+        var newMaze = new MazeGrid(complexitySelect);
+        newMaze.InitMaze();
+        newMaze.GenerateMaze();
+
+
+        gridString = newMaze.ToString();
+        spaceColorString = newMaze.spaceColor.ToString();
+        wallColorString = newMaze.wallColor.ToString();
+
+        await JS.InvokeVoidAsync("setMaze", gridString, newMaze.complexity,
+            spaceColorString, wallColorString);
+
+        if (!firstMazeCreated)
+        {
+            firstMazeCreated = true;
+            await JS.InvokeVoidAsync("activateButtons");
+        }
+
+        await JS.InvokeVoidAsync("setText", MazeWelcome);
+
+    }
+
+    private async void Race() {
+
+        if (raceInProgress)
+        {
+            await JS.InvokeVoidAsync("setText", "Race in progress.");
+            return;
+        }
+
+        else
+        {
+            raceInProgress = true;
+            await JS.InvokeVoidAsync("beginRace");
+        }
+    }
+}
