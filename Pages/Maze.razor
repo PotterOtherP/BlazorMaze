@@ -10,7 +10,8 @@
     xmlns:xlink="http://www.w3.org/1999/xlink"
     xmlns:ev="http://www.w3.org/2001/sml-events"
     id="mazeSVG"
-    viewBox = "0 0 @SVG_WIDTH @SVG_HEIGHT">
+    viewBox = "0 0 @SVG_WIDTH @SVG_HEIGHT"
+    @onclick="CreateMaze">
     <rect x="0" y="0" width="602" height="450" fill="#cfdfd9"/>
     <rect x="602" y="0" width="602" height="450" fill="#afafa9"/>
     <rect x="0" y="450" width="602" height="450" fill="#c2d2d2"/>
@@ -53,6 +54,7 @@
 @code {
     private string MazeWelcome = "Welcome to the maze game in C#! " 
      + "Click on the arena or \"Generate New\" to create a new maze.";
+    private string Loading = "Creating maze...";
     private bool firstMazeCreated = false;
     private string gridString;
     private string spaceColorString;
@@ -61,11 +63,15 @@
     private const int SVG_HEIGHT = 900;
     private int complexitySelect;
 
+
     private async void CreateMaze() {
+
+        await JS.InvokeVoidAsync("setText", Loading);
 
         var newMaze = new MazeGrid(complexitySelect);
         newMaze.InitMaze();
         newMaze.GenerateMaze();
+
 
         gridString = newMaze.ToString();
         spaceColorString = newMaze.spaceColor.ToString();
@@ -79,6 +85,8 @@
             firstMazeCreated = true;
             await JS.InvokeVoidAsync("activateButtons");
         }
+
+        await JS.InvokeVoidAsync("setText", MazeWelcome);
 
     }
 }
