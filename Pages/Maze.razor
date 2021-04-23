@@ -44,7 +44,7 @@
     <button class="w3-button w3-khaki w3-round-large" id="button_generate" @onclick="CreateMaze">Generate New</button>
     <button class="w3-button w3-green w3-round-large" id="button_solve" disabled="true">Solve - Player</button>
     <button class="w3-button w3-blue w3-round-large" id="button_solution" disabled="true">Show Solution</button>
-    <button class="w3-button w3-red w3-round-large" id="button_race" disabled="true">Race</button>
+    <button class="w3-button w3-red w3-round-large" id="button_race" disabled="true" @onclick="Race">Race</button>
     @* <button class="w3-button w3-black w3-round-large" id="button_save" disabled="true" style="display: none;">Save Image</button> *@
     
 </div>
@@ -56,6 +56,7 @@
      + "Click on the arena or \"Generate New\" to create a new maze.";
     private string Loading = "Creating maze...";
     private bool firstMazeCreated = false;
+    private bool raceInProgress = false;
     private string gridString;
     private string spaceColorString;
     private string wallColorString;
@@ -66,7 +67,17 @@
 
     private async void CreateMaze() {
 
-        await JS.InvokeVoidAsync("setText", Loading);
+        if (raceInProgress)
+        {
+            await JS.InvokeVoidAsync("terminateRace");
+            raceInProgress = false;
+        }
+
+        if (complexitySelect > 30)
+        {
+            await JS.InvokeVoidAsync("paintBackground", "#eeeeee");
+            await JS.InvokeVoidAsync("setText", Loading);
+        }
 
         var newMaze = new MazeGrid(complexitySelect);
         newMaze.InitMaze();
@@ -88,5 +99,20 @@
 
         await JS.InvokeVoidAsync("setText", MazeWelcome);
 
+    }
+
+    private async void Race() {
+
+        if (raceInProgress)
+        {
+            await JS.InvokeVoidAsync("setText", "Race in progress.");
+            return;
+        }
+
+        else
+        {
+            raceInProgress = true;
+            await JS.InvokeVoidAsync("beginRace");
+        }
     }
 }

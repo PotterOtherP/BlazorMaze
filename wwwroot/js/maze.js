@@ -15,16 +15,12 @@ const COLOR_PLAYER_TIP = "#00ffff";
 const MAZE_WELCOME = "Welcome to the maze game in C#! " 
      + "Click on the arena or \"Generate New\" to create a new maze.";
 
-
-const RACE_IN_PROGRESS = "Race currently in progress.";
-
 let raceTimer = 0;
 let solution = null;
 let sol = null;
 let sol2 = null;
 let solutionVisible = false;
 let player = null;
-let raceInProgress = false;
 let raceTimeoutID = null;
 
 var Maze = {
@@ -58,29 +54,20 @@ function activateButtons() {
 
     document.getElementById("button_solve").addEventListener("click", playerSolve);
     document.getElementById("button_solution").addEventListener("click", computerSolve);
-    document.getElementById("button_race").addEventListener("click", beginRace);
 
 }
 
 function beginRace() {
 
-    if (!raceInProgress)
-    {
-        document.getElementById("button_solve").setAttribute("disabled", true);
-        if (sol != null ) sol.hide();
-        if (sol2 != null) sol2.hide();
-        let roll = getRandom(3);
-        sol = new Solver(Maze, (roll + 1) % 3, "solverOne");
-        sol2 = new Solver(Maze, (roll + 2) % 3, "solverTwo");
+    document.getElementById("button_solve").setAttribute("disabled", true);
+    if (sol != null ) sol.hide();
+    if (sol2 != null) sol2.hide();
+    let roll = getRandom(3);
+    sol = new Solver(Maze, (roll + 1) % 3, "solverOne");
+    sol2 = new Solver(Maze, (roll + 2) % 3, "solverTwo");
 
-        race();
-    }
+    race();
 
-    else
-    {
-        // console.log("Race currently in progress");
-        setText("Race currently in progress");
-    }
 }
 
 function computerSolve() {
@@ -430,6 +417,11 @@ function pointEquals(p1, p2)
 
 function race() {
 
+    if (sol == null || sol2 == null)
+    {
+        return;
+    }
+
     sol.draw();
     sol.iterate();
 
@@ -438,7 +430,6 @@ function race() {
 
     if (!sol.isSolved() && !sol2.isSolved())
     {
-        raceInProgress = true;
         raceTimeoutID = window.setTimeout(race, 5);
     }
 
@@ -447,7 +438,6 @@ function race() {
         if (sol.isSolved()) sol.draw();
         if (sol2.isSolved()) sol2.draw();
 
-        raceInProgress = false;
         setText(MAZE_WELCOME);
         document.getElementById("button_solve").removeAttribute("disabled");
     }
@@ -456,11 +446,6 @@ function race() {
 
 function setMaze(gridString, complexity, spaceColorString, wallColorString) {
 
-    if (raceInProgress) 
-    {
-        setText(RACE_IN_PROGRESS);
-        return;
-    }
     Maze.grid = [];
 
     var j = 0;
@@ -511,6 +496,13 @@ function setMaze(gridString, complexity, spaceColorString, wallColorString) {
 
 function setText(str) {
     document.getElementById("maze-text").innerText = str;
+}
+
+function terminateRace() {
+
+    sol = null;
+    sol2 = null;
+
 }
 
 function touch(event) {
