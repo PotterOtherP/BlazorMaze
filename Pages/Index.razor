@@ -1,7 +1,7 @@
 @page "/"
 
 @inject IJSRuntime JS;
-
+@using Microsoft.EntityFrameworkCore;
 
 <h1>Maze Generator</h1>
 
@@ -46,7 +46,7 @@
     <button class="w3-button w3-green w3-round-large" id="button_solve" disabled="true">Solve - Player</button>
     <button class="w3-button w3-blue w3-round-large" id="button_solution" disabled="true">Show Solution</button>
     <button class="w3-button w3-red w3-round-large" id="button_race" disabled="true" @onclick="Race">Race</button>
-    @* <button class="w3-button w3-black w3-round-large" id="button_save" disabled="true" style="display: none;">Save Image</button> *@
+    <button class="w3-button w3-black w3-round-large" id="button_save" disabled="true" @onclick="SaveMazeToDatabase">Save Image</button>
     
 </div>
 
@@ -114,6 +114,27 @@
         {
             raceInProgress = true;
             await JS.InvokeVoidAsync("beginRace");
+        }
+    }
+
+    private async void SaveMazeToDatabase() {
+
+        var contextOptions = new DbContextOptionsBuilder<MazeContext>()
+            .UseSqlite("Data Source=MazeDatabase.db")
+            .Options;
+
+        using (var context = new MazeContext(contextOptions))
+        {
+            var newMaze = new MazeGrid(5);
+
+            var newMazeModel = new MazeModel();
+            newMazeModel.GridString = newMaze.ToString();
+            newMazeModel.WallColorString = newMaze.wallColor.ToString();
+            newMazeModel.SpaceColorString = newMaze.spaceColor.ToString();
+
+            await context.MazeModels.AddAsync(newMazeModel);
+
+            await context.SaveChangesAsync();
         }
     }
 }

@@ -51,6 +51,7 @@ function activateButtons() {
     document.getElementById("button_solve").removeAttribute("disabled");
     document.getElementById("button_solution").removeAttribute("disabled");
     document.getElementById("button_race").removeAttribute("disabled");
+    document.getElementById("button_save").removeAttribute("disabled");
 
     document.getElementById("button_solve").addEventListener("click", playerSolve);
     document.getElementById("button_solution").addEventListener("click", computerSolve);
@@ -320,9 +321,6 @@ function paintBackground(color) {
 
 function paintMaze(spaceColorString, wallColorString) {
 
-    if (solutionVisible)
-        solutionVisible = false;
-
     let svg = document.getElementById("mazeSVG");
     svg.innerHTML = "";
     paintBackground(spaceColorString);
@@ -445,6 +443,9 @@ function race() {
 }
 
 function setMaze(gridString, complexity, spaceColorString, wallColorString) {
+
+    if (solutionVisible)
+        computerSolve();
 
     Maze.grid = [];
 
