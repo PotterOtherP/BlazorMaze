@@ -132,7 +132,7 @@
             newMazeModel.WallColorString = newMaze.wallColor.ToString();
             newMazeModel.SpaceColorString = newMaze.spaceColor.ToString();
 
-            await context.MazeModels.AddAsync(newMazeModel);
+            context.MazeModels.Add(newMazeModel);
 
             await context.SaveChangesAsync();
         }
