@@ -10,11 +10,11 @@ namespace BlazorMaze.Migrations
                 name: "MazeModels",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "INTEGER", nullable: false)
-                        .Annotation("Sqlite:Autoincrement", true),
-                    GridString = table.Column<string>(type: "TEXT", nullable: true),
-                    WallColorString = table.Column<string>(type: "TEXT", nullable: true),
-                    SpaceColorString = table.Column<string>(type: "TEXT", nullable: true)
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    GridString = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    WallColorString = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    SpaceColorString = table.Column<string>(type: "nvarchar(max)", nullable: true)
                 },
                 constraints: table =>
                 {
