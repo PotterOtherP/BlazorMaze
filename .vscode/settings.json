@@ -1,0 +1,5 @@
+{
+    "appService.preDeployTask": "publish-release",
+    "appService.deploySubpath": "bin\\Release\\net5.0\\publish",
+    "appService.defaultWebAppToDeploy": "/subscriptions/d36cd2cd-77e2-4133-96d9-62b6fc59760c/resourceGroups/nst-app-resource-group/providers/Microsoft.Web/sites/nst-blazor-maze"
+}
