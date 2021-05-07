@@ -2,6 +2,8 @@
 
 @inject IJSRuntime JS;
 @using Microsoft.EntityFrameworkCore;
+@using Microsoft.Extensions.Configuration;
+@inject IConfiguration Configuration;
 
 <h1>Maze Generator</h1>
 
@@ -119,10 +121,10 @@
 
     private async void SaveMazeToDatabase() {
 
-        var connectionString = "Data Source=MazeDatabase.db";
+        var connectionString = Configuration.GetConnectionString("nstsqldb_connstr");
 
         var contextOptions = new DbContextOptionsBuilder<MazeContext>()
-            .UseSqlite(connectionString)
+            .UseSqlServer(connectionString)
             .Options;
 
         using (var context = new MazeContext(contextOptions))
