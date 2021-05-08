@@ -54,6 +54,9 @@ public class MazeGrid
         grid = new char[rows, columns];
         paths = new List<MazePath>();
         branches = new List<MazePath>();
+
+        InitMaze();
+        GenerateMaze();
     }
 
     public MazeGrid(int complexity) : this(complexity, new ColorRGB(100, 100, 100), new ColorRGB(200, 200, 200))
@@ -66,7 +69,7 @@ public class MazeGrid
         RandomizeColors();
     }
 
-    public void AddPath(int x, int y, Direction d)
+    private void AddPath(int x, int y, Direction d)
     {
         if (grid[y,x] == CH_SPACE)
         {
@@ -75,7 +78,7 @@ public class MazeGrid
         }
     }
 
-    public void AddTopWallPaths()
+    private void AddTopWallPaths()
     {
         int pathY = wall_top + 1;
         int pathX = rand.Next(2) * 2 + 2;
@@ -96,7 +99,7 @@ public class MazeGrid
         }
     }
 
-    public void AddBottomWallPaths()
+    private void AddBottomWallPaths()
     {
         int pathY = wall_bottom - 1;
         int pathX = rand.Next(2) * 2 + 2;
@@ -117,7 +120,7 @@ public class MazeGrid
         }
     }
 
-    public void AddLeftWallPaths()
+    private void AddLeftWallPaths()
     {
         int pathX = wall_left + 1;
         int pathY = rand.Next(2) * 2 + 4;
@@ -136,7 +139,7 @@ public class MazeGrid
 
     }
 
-    public void AddRightWallPaths()
+    private void AddRightWallPaths()
     {
         int pathX = this.wall_right - 1;
         int pathY = rand.Next(2) * 2 + 4;
@@ -155,7 +158,7 @@ public class MazeGrid
 
     }
 
-    public void GenerateMaze()
+    private void GenerateMaze()
     {
         AddTopWallPaths();
         AddBottomWallPaths();
@@ -214,7 +217,7 @@ public class MazeGrid
         }
     }
 
-    public void GrowPaths()
+    private void GrowPaths()
     {
         foreach(MazePath path in paths)
         {
@@ -259,7 +262,7 @@ public class MazeGrid
         }
     }
 
-    public void InitMaze()
+    private void InitMaze()
     {
         for (var i = 0; i < this.rows; ++i)
         {
@@ -302,7 +305,7 @@ public class MazeGrid
     }
 
 
-    public bool IsComplete()
+    private bool IsComplete()
     {
         bool result = true;
 
@@ -343,7 +346,7 @@ public class MazeGrid
         return result;
     }
 
-    public bool PathIsClear(GridPoint pt, Direction dir)
+    private bool PathIsClear(GridPoint pt, Direction dir)
     {
         int checkX = Math.Max(wall_left, pt.x);
         int checkY = Math.Max(wall_top, pt.y);
@@ -414,7 +417,7 @@ public class MazeGrid
         return true;
     }
 
-    public bool PathsActive()
+    private bool PathsActive()
     {
         foreach (MazePath path in paths)
         {
