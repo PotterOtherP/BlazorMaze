@@ -1,12 +1,11 @@
 @page "/Mazes"
 
-@* @using BlazorServerExample.Data *@
-@* @inject WeatherForecastService ForecastService *@
-
 @inject IJSRuntime JS;
+@inject IConfiguration Configuration;
+
 @using Microsoft.EntityFrameworkCore;
 @using Microsoft.Extensions.Configuration;
-@inject IConfiguration Configuration;
+@using BlazorMaze.Components;
 
 <h1>Mazes in Database</h1>
 
@@ -32,8 +31,10 @@ else
                 <tr>
                     <td>@maze.WallColorString</td>
                     <td>@maze.SpaceColorString</td>
-                    <td>@maze.GridString</td>
-                    @* <td>@maze.GridString.Substring(0, 10)</td> *@
+                    <td>@maze.GridString.Substring(0, 10)</td>
+                    <td>
+                        <MazeDeleteButton MazeId=@maze.Id OnClickCallback="@DeleteMaze" />
+                    </td>
                 </tr>
             }
         </tbody>
@@ -64,5 +65,39 @@ else
             }
             
         }
+
     }
+
+    private async void DeleteMaze(int mazeId) {
+
+        var connectionString = Configuration.GetConnectionString("SQLCONNSTR_nstsqldb_connstr");
+
+        var contextOptions = new DbContextOptionsBuilder<MazeContext>()
+            .UseSqlServer(connectionString)
+            .Options;
+
+        using (var context = new MazeContext(contextOptions))
+        {
+            try {
+                
+                var MazeToDelete = await context.MazeModels.FindAsync(mazeId);
+
+                if (MazeToDelete != null)
+                {
+                    context.MazeModels.Remove(MazeToDelete);
+                    await context.SaveChangesAsync();
+                    ModelList = await context.MazeModels.ToListAsync();
+                }
+
+            }
+            catch (Exception ex)
+            {
+                await JS.InvokeVoidAsync("ConsoleLog", ex.Message);
+            }
+            
+        }
+
+        StateHasChanged();
+    }
+
 }

@@ -1,0 +1,19 @@
+<button class="w3-button w3-round w3-flat-pomegranate"
+@onclick="CallDelete">
+Delete
+</button>
+
+@code {
+
+    [Parameter]
+    public int MazeId { get; set; }
+
+    [Parameter]
+    public EventCallback<int> OnClickCallback { get; set; }
+
+    private async Task CallDelete()
+    {
+        await OnClickCallback.InvokeAsync(MazeId);
+    }
+    
+}

@@ -120,39 +120,21 @@
 
         var connectionString = Configuration.GetConnectionString("SQLCONNSTR_nstsqldb_connstr");
 
-        await JS.InvokeVoidAsync("ConsoleLog", "Connection string retrieved from Configuration object");
-
         var contextOptions = new DbContextOptionsBuilder<MazeContext>()
             .UseSqlServer(connectionString)
             .Options;
 
-        await JS.InvokeVoidAsync("ConsoleLog", "Context options set with connection string");
-
         using (var context = new MazeContext(contextOptions))
         {
-            await JS.InvokeVoidAsync("ConsoleLog", "New MazeContext object created");
-            
             var newMaze = new MazeGrid(5);
-            await JS.InvokeVoidAsync("ConsoleLog", "New Maze object created");
-
             var newMazeModel = new MazeModel();
-            await JS.InvokeVoidAsync("ConsoleLog", "New MazeModel object created");
-            
             newMazeModel.GridString = newMaze.ToString();
-            await JS.InvokeVoidAsync("ConsoleLog", "GridString set in MazeModel");
-
             newMazeModel.WallColorString = newMaze.wallColor.ToString();
-            await JS.InvokeVoidAsync("ConsoleLog", "WallColorString set in MazeModel");
-
             newMazeModel.SpaceColorString = newMaze.spaceColor.ToString();
-            await JS.InvokeVoidAsync("ConsoleLog", "SpaceColorString set in MazeModel");
-
             context.MazeModels.Add(newMazeModel);
-            await JS.InvokeVoidAsync("ConsoleLog", "MazeModel added to DBSet");
-
+            
             try {
                 await context.SaveChangesAsync();
-                await JS.InvokeVoidAsync("ConsoleLog", "DB changes saved");
 
             }
             catch (Exception ex)
