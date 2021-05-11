@@ -437,9 +437,18 @@ function race() {
         if (sol2.isSolved()) sol2.draw();
 
         setText(MAZE_WELCOME);
-        document.getElementById("button_solve").removeAttribute("disabled");
+        terminateRace();
     }
 
+}
+
+function raceInProgress()
+{
+    if (sol != null && sol2 != null && !sol.isSolved() && !sol2.isSolved())
+        return true;
+
+    else
+        return false;
 }
 
 function setMaze(gridString, complexity, spaceColorString, wallColorString) {
@@ -503,6 +512,7 @@ function terminateRace() {
 
     sol = null;
     sol2 = null;
+    document.getElementById("button_solve").removeAttribute("disabled");
 
 }
 

@@ -103,6 +103,8 @@
 
     private async void Race() {
 
+        raceInProgress = await JS.InvokeAsync<bool>("raceInProgress");
+
         if (raceInProgress)
         {
             await JS.InvokeVoidAsync("setText", "Race in progress.");
@@ -132,7 +134,7 @@
             newMazeModel.WallColorString = newMaze.wallColor.ToString();
             newMazeModel.SpaceColorString = newMaze.spaceColor.ToString();
             context.MazeModels.Add(newMazeModel);
-            
+
             try {
                 await context.SaveChangesAsync();
 
