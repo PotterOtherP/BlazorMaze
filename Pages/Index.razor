@@ -36,17 +36,17 @@
 
 <div id="maze-info">
 <div id="maze-text">@MazeWelcome</div>
-    
-    <select class="w3-select w3-border" name="complex-select"
-    id="complexity-select" style="margin-bottom: 10px"
-    @bind="complexitySelect">
-        <option disabled value="" selected="selected">Choose difficulty level</option>
-        <option value=5 id="lvl1">Level 1</option>
-        <option value=9 id="lvl2">Level 2</option>
-        <option value=17 id="lvl3">Level 3</option>
-        <option value=27 id="lvl4">Level 4</option>
-        <option value=35 id="lvl5">Level 5</option>
-        <option value=61 id="lvl6">Level 6</option>
+
+    <select class="w3-select w3-border" name="zsp-select"
+        style="margin-bottom: 10px"
+        @bind="complexitySelect">
+        <option value="5" disabled selected>Choose difficulty</option>
+        <option value=5>Level 1</option>
+        <option value=9>Level 2</option>
+        <option value=17>Level 3</option>
+        <option value=27>Level 4</option>
+        <option value=35>Level 5</option>
+        <option value=61>Level 6</option>
     </select>
 
     <button class="w3-button w3-khaki w3-round-large maze-menu-button" id="button_generate" @onclick="CreateMaze">Generate New</button>
@@ -70,7 +70,7 @@
     private string wallColorString;
     private const int SVG_WIDTH = 1204;
     private const int SVG_HEIGHT = 900;
-    private int complexitySelect;
+    private int complexitySelect = 5;
 
 
     private async void CreateMaze() {
