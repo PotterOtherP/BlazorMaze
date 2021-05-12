@@ -29,8 +29,8 @@ else
             @foreach (var maze in ModelList)
             {
                 <tr>
-                    <td>@maze.WallColorString</td>
-                    <td>@maze.SpaceColorString</td>
+                    <td><input type="color" value=@maze.WallColorString></td>
+                    <td><input type="color" value=@maze.SpaceColorString></td>
                     <td>@maze.GridString.Substring(0, 20)</td>
                     <td>
                         <MazeDeleteButton MazeId=@maze.Id OnClickCallback="@DeleteMaze" />
@@ -45,15 +45,21 @@ else
 
     private IList<MazeModel> ModelList;
 
-    protected override async Task OnInitializedAsync()
-    {
+    private MazeContext getNewContext() {
+
         var connectionString = Configuration.GetConnectionString("SQLCONNSTR_nstsqldb_connstr");
 
         var contextOptions = new DbContextOptionsBuilder<MazeContext>()
             .UseSqlServer(connectionString)
             .Options;
 
-        using (var context = new MazeContext(contextOptions))
+        return new MazeContext(contextOptions);
+
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        using (var context = getNewContext())
         {
             try {
                 ModelList = await context.MazeModels.ToListAsync();
@@ -70,13 +76,7 @@ else
 
     private async void DeleteMaze(int mazeId) {
 
-        var connectionString = Configuration.GetConnectionString("SQLCONNSTR_nstsqldb_connstr");
-
-        var contextOptions = new DbContextOptionsBuilder<MazeContext>()
-            .UseSqlServer(connectionString)
-            .Options;
-
-        using (var context = new MazeContext(contextOptions))
+        using (var context = getNewContext())
         {
             try {
                 
