@@ -17,16 +17,16 @@ svg {
 
     display: flex;
     flex-direction: column;
-    width: 30%;
+    width: 25%;
     height: 80vh;
     margin: 5%;
 }
 
 
 
-button {
+.maze-menu-button {
     margin-bottom: 10px;
-
+    font-weight: bold;
 }
 
 @media screen and (max-width: 1100px) {

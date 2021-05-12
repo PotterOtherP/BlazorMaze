@@ -2,3 +2,4 @@
 /obj
 appsettings.*
 *.db
+/.vs
