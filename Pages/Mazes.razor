@@ -9,14 +9,17 @@
 
 <h1>Mazes in Database</h1>
 
-<p>These are the mazes which users have saved to the database.</p>
 
 @if (ModelList == null)
 {
     <p><em>Loading...</em></p>
 }
+
 else
 {
+    SavedMazeCount = ModelList.Count;
+    <p>There are @SavedMazeCount mazes that have been saved to the database.</p>
+
     <table class="table">
         <thead>
             <tr>
@@ -44,6 +47,7 @@ else
 @code {
 
     private IList<MazeModel> ModelList;
+    private int SavedMazeCount;
 
     private MazeContext getNewContext() {
 
@@ -85,6 +89,7 @@ else
                 if (MazeToDelete != null)
                 {
                     context.MazeModels.Remove(MazeToDelete);
+
                     await context.SaveChangesAsync();
                     ModelList = await context.MazeModels.ToListAsync();
                 }
