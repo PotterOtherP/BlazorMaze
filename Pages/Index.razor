@@ -62,6 +62,8 @@
 @code {
     private string MazeWelcome = "Welcome to the maze game in C#! " 
      + "Click on the arena or \"Generate New\" to create a new maze.";
+    private string DBFull = "The database is full of mazes, delete some before "
+     + "saving a new one.";
     private string Loading = "Creating maze...";
     private bool firstMazeCreated = false;
     private bool raceInProgress = false;
@@ -70,6 +72,7 @@
     private string wallColorString;
     private const int SVG_WIDTH = 1204;
     private const int SVG_HEIGHT = 900;
+    private const int MAX_DB_MAZES = 10;
     private int complexitySelect = 5;
 
 
@@ -133,22 +136,31 @@
 
         using (var context = new MazeContext(contextOptions))
         {
-            var newMazeModel = new MazeModel();
-            newMazeModel.GridString = gridString;
-            newMazeModel.WallColorString = wallColorString;
-            newMazeModel.SpaceColorString = spaceColorString;
-            context.MazeModels.Add(newMazeModel);
+            var mazesInDB = context.MazeModels.CountAsync<MazeModel>().Result;
 
-            try {
-                await context.SaveChangesAsync();
-                await JS.InvokeVoidAsync("setText", "Maze saved to database.");
-
-            }
-            catch (Exception ex)
+            if (mazesInDB >= MAX_DB_MAZES)
             {
-                await JS.InvokeVoidAsync("ConsoleLog", ex.Message);
+                await JS.InvokeVoidAsync("setText", DBFull);
             }
-            
+
+            else
+            {
+                var newMazeModel = new MazeModel();
+                newMazeModel.GridString = gridString;
+                newMazeModel.WallColorString = wallColorString;
+                newMazeModel.SpaceColorString = spaceColorString;
+                context.MazeModels.Add(newMazeModel);
+
+                try {
+                    await context.SaveChangesAsync();
+                    await JS.InvokeVoidAsync("setText", "Maze saved to database.");
+
+                }
+                catch (Exception ex)
+                {
+                    await JS.InvokeVoidAsync("ConsoleLog", ex.Message);
+                }
+            }
         }
     }
 }

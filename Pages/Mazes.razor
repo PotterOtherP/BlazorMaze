@@ -26,6 +26,7 @@ else
                 <th>Wall color</th>
                 <th>Space color</th>
                 <th>Grid</th>
+                <th>SVG</th>
             </tr>
         </thead>
         <tbody>
@@ -35,6 +36,15 @@ else
                     <td><input type="color" value=@maze.WallColorString></td>
                     <td><input type="color" value=@maze.SpaceColorString></td>
                     <td>@maze.GridString.Substring(0, 20)</td>
+                    <td style="padding: 0px;">
+                        <MazeSVG
+                        WallColorString=@maze.WallColorString
+                        SpaceColorString=@maze.SpaceColorString
+                        GridString=@maze.GridString
+                        SVG_Width=@width
+                        SVG_Height=@height
+                        />
+                    </td>
                     <td>
                         <MazeDeleteButton MazeId=@maze.Id OnClickCallback="@DeleteMaze" />
                     </td>
@@ -48,6 +58,8 @@ else
 
     private IList<MazeModel> ModelList;
     private int SavedMazeCount;
+    private const int width = 200;
+    private const int height = 150;
 
     private MazeContext getNewContext() {
 
