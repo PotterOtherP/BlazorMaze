@@ -3,11 +3,11 @@
 <svg xmlns="http://www.w3.org/2000/svg"
     xmlns:xlink="http://www.w3.org/1999/xlink"
     xmlns:ev="http://www.w3.org/2001/sml-events"
-    viewBox = "0 0 @SVG_Width @SVG_Height"
+    viewBox = "0 0 @SVG_WIDTH @SVG_HEIGHT"
     style="width: @widthStr; height: @heightStr; margin: 2% 1% 2% 1%"
     id=@svgTagId>
 
-    <rect x="0" y="0" width=@SVG_Width height=@SVG_Height fill="#cfdfd9"/>
+    <rect x="0" y="0" width=@SVG_WIDTH height=@SVG_HEIGHT fill="#cfdfd9"/>
 
 
 
@@ -30,13 +30,11 @@
     [Parameter]
     public string GridString { get; set; }
 
-    [Parameter]
-    public int SVG_Width { get; set; }
+    private const int BOX_WIDTH = 200;
+    private const int BOX_HEIGHT = 150;
 
-    [Parameter]
-    public int SVG_Height { get; set; }
-
-    private List<string> AppendedTags = new List<string>();
+    private const int SVG_WIDTH = 1204;
+    private const int SVG_HEIGHT = 900;
 
     private string widthStr;
     private string heightStr;
@@ -44,9 +42,8 @@
 
     protected override void OnInitialized() {
 
-        AppendedTags.Add("<rect x=\"0\" y=\"0\" width=@SVG_Width height=@SVG_Height fill=\"#cfdfd9\"/>");
-        widthStr = $"{SVG_Width}px";
-        heightStr = $"{SVG_Height}px";
+        widthStr = $"{BOX_WIDTH}px";
+        heightStr = $"{BOX_HEIGHT}px";
         svgTagId = $"svg_{mazeId}";
 
     }
