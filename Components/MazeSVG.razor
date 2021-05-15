@@ -1,8 +1,11 @@
+@inject IJSRuntime JS;
+
 <svg xmlns="http://www.w3.org/2000/svg"
     xmlns:xlink="http://www.w3.org/1999/xlink"
     xmlns:ev="http://www.w3.org/2001/sml-events"
     viewBox = "0 0 @SVG_Width @SVG_Height"
-    style="width: @widthStr; height: @heightStr; margin: 2% 1% 2% 1%">
+    style="width: @widthStr; height: @heightStr; margin: 2% 1% 2% 1%"
+    id=@svgTagId>
 
     <rect x="0" y="0" width=@SVG_Width height=@SVG_Height fill="#cfdfd9"/>
 
@@ -11,6 +14,12 @@
 </svg>
 
 @code {
+
+    [Parameter]
+    public int mazeId { get; set; }
+
+    [Parameter]
+    public int Complexity { get; set; }
 
     [Parameter]
     public string WallColorString { get; set; }
@@ -31,12 +40,22 @@
 
     private string widthStr;
     private string heightStr;
+    private string svgTagId;
 
     protected override void OnInitialized() {
 
         AppendedTags.Add("<rect x=\"0\" y=\"0\" width=@SVG_Width height=@SVG_Height fill=\"#cfdfd9\"/>");
         widthStr = $"{SVG_Width}px";
         heightStr = $"{SVG_Height}px";
+        svgTagId = $"svg_{mazeId}";
 
     }
+
+    protected async override Task OnAfterRenderAsync(bool first) {
+
+        await JS.InvokeVoidAsync("setMaze",
+            GridString, SpaceColorString, WallColorString,
+            Complexity, svgTagId);
+    }
+
 }

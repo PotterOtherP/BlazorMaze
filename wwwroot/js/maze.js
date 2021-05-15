@@ -11,6 +11,8 @@ const COLOR_YELLOW = "#b0b010";
 const COLOR_WHITE = "#ffffff";
 const COLOR_PLAYER = "#ff1493";
 const COLOR_PLAYER_TIP = "#00ffff";
+const ROUNDING_LARGE = 4;
+const ROUNDING_SMALL = 2;
 
 const MAZE_WELCOME = "Welcome to the maze game in C#! " 
      + "Click on the arena or \"Generate New\" to create a new maze.";
@@ -22,6 +24,7 @@ let sol2 = null;
 let solutionVisible = false;
 let player = null;
 let raceTimeoutID = null;
+let rounding = ROUNDING_LARGE;
 
 var Maze = {
 
@@ -104,7 +107,7 @@ function drawHorizontal(x, y, length, thickness, color)
     el.setAttribute("width", length);
     el.setAttribute("height", thickness);
     el.setAttribute("fill", color);
-    el.setAttribute("rx", 10);
+    el.setAttribute("rx", rounding);
 
     svg.appendChild(el);
 
@@ -174,7 +177,7 @@ function drawVertical(x, y, length, thickness, color)
     el.setAttribute("width", thickness);
     el.setAttribute("height", length);
     el.setAttribute("fill", color);
-    el.setAttribute("rx", 10);
+    el.setAttribute("rx", rounding);
 
     svg.appendChild(el);
 
@@ -501,6 +504,8 @@ function setMaze(gridString, spaceColorString, wallColorString, complexity, svgI
             Maze.exitY = Maze.rows - 1;
         }
     }
+
+    rounding = (complexity < 20) ? ROUNDING_LARGE : ROUNDING_SMALL;
 
     paintMaze(spaceColorString, wallColorString);
 
