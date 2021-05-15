@@ -10,5 +10,6 @@ namespace BlazorMaze {
         }
 
         public DbSet<MazeModel> MazeModels { get; set; }
+
     }
 }

@@ -292,7 +292,7 @@ class Solver {
     draw()
     {
         let el = document.createElementNS(SVG_NAMESPACE, "polyline");
-        let svg = document.getElementById("mazeSVG");
+        let svg = document.getElementById(this.maze.svgTagId);
         
         let elPrevious = document.getElementById(this.name);
 
@@ -322,7 +322,7 @@ class Solver {
     growTip()
     {
         let el = document.createElementNS(SVG_NAMESPACE, "line");
-        let svg = document.getElementById("mazeSVG");
+        let svg = document.getElementById(this.maze.svgTagId);
         
         let elPrevious = document.getElementById("solverTip");
 
@@ -381,7 +381,7 @@ class Solver {
     shrinkTip()
     {
         let el = document.createElementNS(SVG_NAMESPACE, "line");
-        let svg = document.getElementById("mazeSVG");
+        let svg = document.getElementById(this.maze.svgTagId);
         
         let elPrevious = document.getElementById("solverTip");
 
@@ -438,7 +438,7 @@ class Solver {
 
     hide()
     {
-        let svg = document.getElementById("mazeSVG");        
+        let svg = document.getElementById(this.maze.svgTagId);        
         let elPrevious = document.getElementById(this.name);
 
         if (elPrevious != null) svg.removeChild(elPrevious);

@@ -42,7 +42,9 @@ var Maze = {
     wall_bottom: 0,
 
     rowPixels: 0,
-    columnPixels: 0
+    columnPixels: 0,
+
+    svgTagId: ""
 
 };
 
@@ -95,7 +97,7 @@ function computerSolve() {
 function drawHorizontal(x, y, length, thickness, color)
 {
     let el = document.createElementNS(SVG_NAMESPACE, "rect");
-    let svg = document.getElementById("mazeSVG");
+    let svg = document.getElementById(Maze.svgTagId);
 
     el.setAttribute("x", x);
     el.setAttribute("y", y);
@@ -113,7 +115,7 @@ function drawPlayer() {
     let el = document.createElementNS(SVG_NAMESPACE, "polyline");
     let el_tip1 = document.createElementNS(SVG_NAMESPACE, "circle");
     let el_tip2 = document.createElementNS(SVG_NAMESPACE, "circle");
-    let svg = document.getElementById("mazeSVG");
+    let svg = document.getElementById(Maze.svgTagId);
     
     let elPrevious = document.getElementById("playerPL");
     let elPrevious_t1 = document.getElementById("player_t1");
@@ -165,7 +167,7 @@ function drawPlayer() {
 function drawVertical(x, y, length, thickness, color)
 {
     let el = document.createElementNS(SVG_NAMESPACE, "rect");
-    let svg = document.getElementById("mazeSVG");
+    let svg = document.getElementById(Maze.svgTagId);
 
     el.setAttribute("x", x);
     el.setAttribute("y", y);
@@ -302,7 +304,7 @@ function mouse(event) {
 function paintBackground(color) {
 
     let el = document.createElementNS(SVG_NAMESPACE, "rect");
-    let svg = document.getElementById("mazeSVG");
+    let svg = document.getElementById(Maze.svgTagId);
     svg.innerHTML = "";
 
     el.setAttribute("x", 0);
@@ -321,7 +323,7 @@ function paintBackground(color) {
 
 function paintMaze(spaceColorString, wallColorString) {
 
-    let svg = document.getElementById("mazeSVG");
+    let svg = document.getElementById(Maze.svgTagId);
     svg.innerHTML = "";
     paintBackground(spaceColorString);
 
@@ -402,7 +404,7 @@ function playerSolve() {
 
     // window.addEventListener("mousemove", mouse, true);
     window.addEventListener("keydown", keyDown, true);
-    document.getElementById("mazeSVG").addEventListener("touchmove", touch, false);
+    document.getElementById(Maze.svgTagId).addEventListener("touchmove", touch, false);
 
     drawPlayer();
 
@@ -451,13 +453,13 @@ function raceInProgress()
         return false;
 }
 
-function setMaze(gridString, complexity, spaceColorString, wallColorString) {
+function setMaze(gridString, spaceColorString, wallColorString, complexity, svgId) {
 
     if (solutionVisible)
         computerSolve();
 
     Maze.grid = [];
-
+    Maze.svgTagId = svgId;
     var j = 0;
     Maze.grid.push([]);
 
