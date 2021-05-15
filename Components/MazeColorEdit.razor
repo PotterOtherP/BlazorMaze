@@ -1,0 +1,26 @@
+<input type="color"
+@onchange="CallUpdateColor"
+value=ColorString
+>
+
+
+@code {
+
+    [Parameter]
+    public int SavedMazeId { get; set; }
+
+    [Parameter]
+    public bool WallOrSpace { get; set; }
+
+    [Parameter]
+    public string ColorString { get; set; }
+
+    [Parameter]
+    public EventCallback<int> OnChangeCallback { get; set; }
+
+    private async Task CallUpdateColor()
+    {
+        await OnChangeCallback.InvokeAsync(SavedMazeId);
+    }
+
+}

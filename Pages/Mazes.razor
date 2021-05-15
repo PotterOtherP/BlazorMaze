@@ -33,7 +33,14 @@ else
             @foreach (var maze in ModelList)
             {
                 <tr>
-                    <td><input type="color" value=@maze.WallColorString></td>
+                    <td>
+                        <MazeColorEdit
+                        SavedMazeId=@maze.Id
+                        WallOrSpace=true
+                        ColorString=@maze.WallColorString
+                        OnChangeCallback="@UpdateColor"
+                        />
+                    </td>
                     <td><input type="color" value=@maze.SpaceColorString></td>
                     <td>@maze.GridString.Substring(0, 20)</td>
                     <td style="padding: 0px;">
@@ -86,6 +93,35 @@ else
             
         }
 
+    }
+
+    private async void UpdateColor(int mazeId) {
+
+        Console.WriteLine("Hello update color");
+        await JS.InvokeVoidAsync("ConsoleLog", "UpdateColor() called");
+
+        bool wallOrSpace = true;
+        string colorString = "#ff0000";
+
+        using (var context = getNewContext())
+        {
+            var MazeToUpdate = await context.MazeModels.FindAsync(mazeId);
+
+            // true for wall, false for space
+            if (wallOrSpace)
+            {
+                MazeToUpdate.WallColorString = colorString;
+            }
+
+            else
+            {
+                MazeToUpdate.SpaceColorString = colorString;
+            }
+
+            await context.SaveChangesAsync();
+        }
+
+        StateHasChanged();
     }
 
     private async void DeleteMaze(int mazeId) {
