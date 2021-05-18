@@ -1,0 +1,151 @@
+@inject IJSRuntime JS;
+@inject IConfiguration Configuration;
+
+@using Microsoft.EntityFrameworkCore;
+@using Microsoft.Extensions.Configuration;
+
+<tr>
+    <td>
+        <input type="color" value=@WallColorString
+        @onchange="(ui) => UpdateColor((string)ui.Value, true)">
+    </td>
+    <td>
+        <input type="color" value=@SpaceColorString
+        @onchange="(ui) => UpdateColor((string)ui.Value, false)">
+    </td>
+    <td>
+        <svg xmlns="http://www.w3.org/2000/svg"
+            xmlns:xlink="http://www.w3.org/1999/xlink"
+            xmlns:ev="http://www.w3.org/2001/sml-events"
+            viewBox = "0 0 @SVG_WIDTH @SVG_HEIGHT"
+            style="width: @widthStr; height: @heightStr; margin: 2% 1% 2% 1%"
+            id=@svgTagId>
+
+            <rect x="0" y="0" width=@SVG_WIDTH height=@SVG_HEIGHT fill="#cfdfd9"/>
+        </svg>
+    </td>
+    <td>
+        <button class="w3-button w3-round w3-flat-pomegranate"
+        @onclick="@DeleteMaze">
+        Delete @MazeId
+        </button>
+    </td>
+</tr>
+
+@code {
+
+    [Parameter]
+    public int MazeId { get; set; }
+
+    [Parameter]
+    public int Complexity { get; set; }
+
+    [Parameter]
+    public string WallColorString { get; set; }
+
+    [Parameter]
+    public string SpaceColorString { get; set; }
+
+    [Parameter]
+    public string GridString { get; set; }
+
+    [Parameter]
+    public EventCallback OnClickCallback { get; set; }
+
+
+    private const int BOX_WIDTH = 200;
+    private const int BOX_HEIGHT = 150;
+
+    private const int SVG_WIDTH = 1204;
+    private const int SVG_HEIGHT = 900;
+
+    private string widthStr;
+    private string heightStr;
+    private string svgTagId;
+
+    private async void DeleteMaze() {
+
+        using (var context = GetNewContext())
+        {
+            try {
+                
+                var MazeToDelete = await context.MazeModels.FindAsync(MazeId);
+
+                if (MazeToDelete != null)
+                {
+                    context.MazeModels.Remove(MazeToDelete);
+
+                    await context.SaveChangesAsync();
+                }
+
+            }
+            catch (Exception ex)
+            {
+                await JS.InvokeVoidAsync("ConsoleLog", ex.Message);
+            }
+            
+        }
+
+        await OnClickCallback.InvokeAsync();
+    }
+
+    private MazeContext GetNewContext() {
+
+        var connectionString = Configuration.GetConnectionString("SQLCONNSTR_nstsqldb_connstr");
+
+        var contextOptions = new DbContextOptionsBuilder<MazeContext>()
+            .UseSqlServer(connectionString)
+            .Options;
+
+        return new MazeContext(contextOptions);
+
+    }
+
+    protected override void OnInitialized() {
+
+        widthStr = $"{BOX_WIDTH}px";
+        heightStr = $"{BOX_HEIGHT}px";
+        svgTagId = $"svg_{MazeId}";
+
+    }
+
+    protected async override Task OnAfterRenderAsync(bool first) {
+
+        if (true)
+        {
+            await JS.InvokeVoidAsync("setMaze",
+                GridString, SpaceColorString, WallColorString,
+                Complexity, svgTagId);
+
+        }
+    }
+
+    private async void UpdateColor(string colorString, bool wallOrSpace) {
+
+        using (var context = GetNewContext())
+        {
+            var MazeToUpdate = await context.MazeModels.FindAsync(MazeId);
+
+            // true for wall, false for space
+            if (wallOrSpace)
+            {
+                MazeToUpdate.WallColorString = colorString;
+            }
+
+            else
+            {
+                MazeToUpdate.SpaceColorString = colorString;
+            }
+
+            await context.SaveChangesAsync();
+        }
+
+        await JS.InvokeVoidAsync("setMaze",
+                GridString, SpaceColorString, WallColorString,
+                Complexity, svgTagId);
+
+        await OnClickCallback.InvokeAsync();
+    }
+
+
+}

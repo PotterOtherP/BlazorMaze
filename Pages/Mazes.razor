@@ -7,7 +7,7 @@
 @using Microsoft.Extensions.Configuration;
 @using BlazorMaze.Components;
 
-<h1>Mazes in Database</h1>
+<h1>Saved Mazes</h1>
 
 
 @if (ModelList == null)
@@ -19,43 +19,28 @@ else
 {
     SavedMazeCount = ModelList.Count;
     <p>There are @SavedMazeCount mazes that have been saved to the database.</p>
+    <p>Click on the color inputs to change the maze colors! Changes are automatically saved.</p>
 
     <table class="table">
         <thead>
             <tr>
                 <th>Wall color</th>
-                <th>Space color</th>
-                <th>Grid</th>
-                <th>SVG</th>
+                <th>Background color</th>
+                <th>Preview</th>
+                <th></th>
             </tr>
         </thead>
         <tbody>
-            @foreach (var maze in ModelList)
+            @foreach (var maze in ModelList.Reverse())
             {
-                <tr>
-                    <td>
-                        <MazeColorEdit
-                        SavedMazeId=@maze.Id
-                        WallOrSpace=true
-                        ColorString=@maze.WallColorString
-                        OnChangeCallback="@UpdateColor"
-                        />
-                    </td>
-                    <td><input type="color" value=@maze.SpaceColorString></td>
-                    <td>@maze.GridString.Substring(0, 20)</td>
-                    <td style="padding: 0px;">
-                        <MazeSVG
-                        mazeId=@maze.Id
-                        Complexity=@maze.Complexity
-                        WallColorString=@maze.WallColorString
-                        SpaceColorString=@maze.SpaceColorString
-                        GridString=@maze.GridString
-                        />
-                    </td>
-                    <td>
-                        <MazeDeleteButton MazeId=@maze.Id OnClickCallback="@DeleteMaze" />
-                    </td>
-                </tr>
+                <MazeTableRow
+                MazeId=@maze.Id
+                Complexity=@maze.Complexity
+                WallColorString=@maze.WallColorString
+                SpaceColorString=@maze.SpaceColorString
+                GridString=@maze.GridString
+                OnClickCallback="@OnInitializedAsync"
+                />
             }
         </tbody>
     </table>
@@ -95,60 +80,6 @@ else
 
     }
 
-    private async void UpdateColor(int mazeId) {
-
-        Console.WriteLine("Hello update color");
-        await JS.InvokeVoidAsync("ConsoleLog", "UpdateColor() called");
-
-        bool wallOrSpace = true;
-        string colorString = "#ff0000";
-
-        using (var context = getNewContext())
-        {
-            var MazeToUpdate = await context.MazeModels.FindAsync(mazeId);
-
-            // true for wall, false for space
-            if (wallOrSpace)
-            {
-                MazeToUpdate.WallColorString = colorString;
-            }
-
-            else
-            {
-                MazeToUpdate.SpaceColorString = colorString;
-            }
-
-            await context.SaveChangesAsync();
-        }
-
-        StateHasChanged();
-    }
-
-    private async void DeleteMaze(int mazeId) {
-
-        using (var context = getNewContext())
-        {
-            try {
-                
-                var MazeToDelete = await context.MazeModels.FindAsync(mazeId);
-
-                if (MazeToDelete != null)
-                {
-                    context.MazeModels.Remove(MazeToDelete);
-
-                    await context.SaveChangesAsync();
-                    ModelList = await context.MazeModels.ToListAsync();
-                }
-
-            }
-            catch (Exception ex)
-            {
-                await JS.InvokeVoidAsync("ConsoleLog", ex.Message);
-            }
-            
-        }
-
-        StateHasChanged();
-    }
+    
 
 }
