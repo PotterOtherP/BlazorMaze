@@ -97,6 +97,18 @@ function computerSolve() {
 
 }
 
+function deactivateButtons() {
+
+    document.getElementById("button_solve").setAttribute("disabled", "true");
+    document.getElementById("button_solution").setAttribute("disabled", "true");
+    document.getElementById("button_race").setAttribute("disabled", "true");
+    document.getElementById("button_save").setAttribute("disabled", "true");
+
+    document.getElementById("button_solve").removeEventListener("click", playerSolve);
+    document.getElementById("button_solution").removeEventListener("click", computerSolve);
+
+}
+
 function drawHorizontal(x, y, length, thickness, color)
 {
     let el = document.createElementNS(SVG_NAMESPACE, "rect");
@@ -304,10 +316,10 @@ function mouse(event) {
 
 }
 
-function paintBackground(color) {
+function paintBackground(color, svgName) {
 
     let el = document.createElementNS(SVG_NAMESPACE, "rect");
-    let svg = document.getElementById(Maze.svgTagId);
+    let svg = document.getElementById(svgName);
     svg.innerHTML = "";
 
     el.setAttribute("x", 0);
@@ -328,7 +340,7 @@ function paintMaze(spaceColorString, wallColorString) {
 
     let svg = document.getElementById(Maze.svgTagId);
     svg.innerHTML = "";
-    paintBackground(spaceColorString);
+    paintBackground(spaceColorString, Maze.svgTagId);
 
     // Horizontal wall sections
     for (let i = 0; i < Maze.rows; ++i)
@@ -456,7 +468,7 @@ function raceInProgress()
         return false;
 }
 
-function setMaze(gridString, spaceColorString, wallColorString, complexity, svgId) {
+function setMaze(gridString, wallColorString, spaceColorString, complexity, svgId) {
 
     if (solutionVisible)
         computerSolve();

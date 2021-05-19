@@ -1,4 +1,6 @@
 @page "/"
+@page "/index"
+@page "/index/{SavedMazeId:int}"
 
 @using Microsoft.EntityFrameworkCore;
 @using Microsoft.Extensions.Configuration;
@@ -6,11 +8,7 @@
 @inject IJSRuntime JS;
 @inject IConfiguration Configuration;
 
-
-
 <h1>Maze Generator</h1>
-
-
 
 <div style="display: flex; flex-direction: flex-row;">
 
@@ -20,18 +18,8 @@
     id="mainMazeSVG"
     viewBox = "0 0 @SVG_WIDTH @SVG_HEIGHT"
     @onclick="CreateMaze">
-    <rect x="0" y="0" width="602" height="450" fill="#cfdfd9"/>
-    <rect x="602" y="0" width="602" height="450" fill="#afafa9"/>
-    <rect x="0" y="450" width="602" height="450" fill="#c2d2d2"/>
-    <rect x="602" y="450" width="602" height="450" fill="#a2a2a2"/>
 
-    @* <rect x="0" y="0" width="1204" height="900" fill="#cfdfd9"/> *@
-
-
-    <line x1="0" y1="0" x2="0" y2="900" stroke="black" stroke-width="12"/>
-    <line x1="1204" y1="0" x2="1204" y2="900" stroke="black" stroke-width="12"/>
-    <line x1="0" y1="0" x2="1204" y2="0" stroke="black" stroke-width="6"/>
-    <line x1="0" y1="900" x2="1204" y2="900" stroke="black" stroke-width="6"/>
+    <rect x="0" y="0" width="1204" height="900" fill="#cfdfd9"/>
 
 </svg>
 
@@ -77,8 +65,13 @@
     private const int MAX_DB_MAZES = 10;
     private int complexitySelect = 5;
 
+    [Parameter]
+    public int SavedMazeId { get; set; }
+
 
     private async void CreateMaze() {
+
+        SavedMazeId = 0;
 
         if (raceInProgress)
         {
@@ -99,8 +92,8 @@
         complexity = newMaze.complexity;
 
         await JS.InvokeVoidAsync("setMaze",
-            gridString, spaceColorString, wallColorString,
-            newMaze.complexity, "mainMazeSVG");
+            gridString, wallColorString, spaceColorString,
+            complexity, "mainMazeSVG");
 
         if (!firstMazeCreated)
         {
@@ -110,6 +103,45 @@
 
         await JS.InvokeVoidAsync("setText", MazeWelcome);
 
+    }
+
+    private MazeContext GetNewContext() {
+
+        var connectionString = Configuration.GetConnectionString("SQLCONNSTR_nstsqldb_connstr");
+
+        var contextOptions = new DbContextOptionsBuilder<MazeContext>()
+            .UseSqlServer(connectionString)
+            .Options;
+
+        return new MazeContext(contextOptions);
+
+    }
+
+    protected override async Task OnAfterRenderAsync(bool first) {
+
+        if (SavedMazeId > 0)
+        {
+            using (var context = GetNewContext())
+            {
+                var MazeToDisplay = await context.MazeModels.FindAsync(SavedMazeId);
+
+                if (MazeToDisplay != null)
+                {
+                    await JS.InvokeVoidAsync("setMaze",
+                    MazeToDisplay.GridString,
+                    MazeToDisplay.WallColorString,
+                    MazeToDisplay.SpaceColorString,
+                    MazeToDisplay.Complexity,
+                    "mainMazeSVG");
+
+                    if (!firstMazeCreated)
+                    {
+                        firstMazeCreated = true;
+                        await JS.InvokeVoidAsync("activateButtons");
+                    }
+                }
+            }
+        }
     }
 
     private async void Race() {
@@ -131,13 +163,13 @@
 
     private async void SaveMazeToDatabase() {
 
-        var connectionString = Configuration.GetConnectionString("SQLCONNSTR_nstsqldb_connstr");
+        if (SavedMazeId > 0)
+        {
+            await JS.InvokeVoidAsync("setText", "Maze already exists in database.");
+            return;
+        }
 
-        var contextOptions = new DbContextOptionsBuilder<MazeContext>()
-            .UseSqlServer(connectionString)
-            .Options;
-
-        using (var context = new MazeContext(contextOptions))
+        using (var context = GetNewContext())
         {
             var mazesInDB = context.MazeModels.CountAsync<MazeModel>().Result;
 
@@ -151,26 +183,15 @@
                 try {
 
                     var newMazeModel = new MazeModel();
-                    await JS.InvokeVoidAsync("ConsoleLog", "MazeModel created.");
-                    
                     newMazeModel.GridString = gridString;
-                    await JS.InvokeVoidAsync("ConsoleLog", "GridString set.");
-                    
                     newMazeModel.WallColorString = wallColorString;
-                    await JS.InvokeVoidAsync("ConsoleLog", "WallColorString set.");
-                    
                     newMazeModel.SpaceColorString = spaceColorString;
-                    await JS.InvokeVoidAsync("ConsoleLog", "SpaceColorString set.");
-                    
                     newMazeModel.Complexity = complexity;
-                    await JS.InvokeVoidAsync("ConsoleLog", "Complexity set.");
-
                     context.MazeModels.Add(newMazeModel);
-                    await JS.InvokeVoidAsync("ConsoleLog", "MazeModel added to context.");
 
                     try {
-                    await context.SaveChangesAsync();
-                    await JS.InvokeVoidAsync("setText", "Maze saved to database.");
+                        await context.SaveChangesAsync();
+                        await JS.InvokeVoidAsync("setText", "Maze saved to database.");
 
                     }
                     catch (DbUpdateException dex)

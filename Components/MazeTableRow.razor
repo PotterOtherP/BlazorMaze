@@ -7,13 +7,14 @@
 <tr>
     <td>
         <input type="color" value=@WallColorString
-        @onchange="(ui) => UpdateColor((string)ui.Value, true)">
+        @onchange="(ui) => UpdateColor(ui.Value.ToString(), true)">
     </td>
     <td>
         <input type="color" value=@SpaceColorString
-        @onchange="(ui) => UpdateColor((string)ui.Value, false)">
+        @onchange="(ui) => UpdateColor(ui.Value.ToString(), false)">
     </td>
     <td>
+        <a href="/index/@MazeId">
         <svg xmlns="http://www.w3.org/2000/svg"
             xmlns:xlink="http://www.w3.org/1999/xlink"
             xmlns:ev="http://www.w3.org/2001/sml-events"
@@ -23,6 +24,7 @@
 
             <rect x="0" y="0" width=@SVG_WIDTH height=@SVG_HEIGHT fill="#cfdfd9"/>
         </svg>
+        </a>
     </td>
     <td>
         <button class="w3-button w3-round w3-flat-pomegranate"
@@ -111,13 +113,18 @@
 
     protected async override Task OnAfterRenderAsync(bool first) {
 
-        if (true)
-        {
+        try {
             await JS.InvokeVoidAsync("setMaze",
-                GridString, SpaceColorString, WallColorString,
+                GridString, WallColorString, SpaceColorString,
                 Complexity, svgTagId);
-
         }
+
+        catch (Exception ex)
+        {
+            await JS.InvokeVoidAsync("ConsoleLog", ex.Message);
+        }
+
+
     }
 
     private async void UpdateColor(string colorString, bool wallOrSpace) {
@@ -126,23 +133,34 @@
         {
             var MazeToUpdate = await context.MazeModels.FindAsync(MazeId);
 
-            // true for wall, false for space
-            if (wallOrSpace)
+            if (MazeToUpdate != null)
             {
-                MazeToUpdate.WallColorString = colorString;
+                // true for wall, false for space
+                if (wallOrSpace)
+                {
+                    MazeToUpdate.WallColorString = colorString;
+                }
+
+                else
+                {
+                    MazeToUpdate.SpaceColorString = colorString;
+                }
+
+                await context.SaveChangesAsync();
             }
 
-            else
-            {
-                MazeToUpdate.SpaceColorString = colorString;
-            }
-
-            await context.SaveChangesAsync();
         }
 
-        await JS.InvokeVoidAsync("setMaze",
-                GridString, SpaceColorString, WallColorString,
+        try {
+            await JS.InvokeVoidAsync("setMaze",
+                GridString, WallColorString, SpaceColorString,
                 Complexity, svgTagId);
+        }
+
+        catch (Exception ex)
+        {
+            await JS.InvokeVoidAsync("ConsoleLog", ex.Message);
+        }
 
         await OnClickCallback.InvokeAsync();
     }
