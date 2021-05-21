@@ -7,8 +7,6 @@
 @using Microsoft.Extensions.Configuration;
 @using BlazorMaze.Components;
 
-<h1>Saved Mazes</h1>
-
 
 @if (ModelList == null)
 {
@@ -18,7 +16,7 @@
 else
 {
     SavedMazeCount = ModelList.Count;
-    <p>There are @SavedMazeCount mazes that have been saved to the database.</p>
+    <p><h4>There are @SavedMazeCount mazes that have been saved to the database.</h4></p>
     <p>Click on the color inputs to change the maze colors! Changes are automatically saved.</p>
 
     <table class="table">

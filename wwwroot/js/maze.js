@@ -14,7 +14,7 @@ const COLOR_PLAYER_TIP = "#00ffff";
 const ROUNDING_LARGE = 4;
 const ROUNDING_SMALL = 2;
 
-const MAZE_WELCOME = "Welcome to the maze game in C#! " 
+const MAZE_WELCOME = "Welcome to the maze game! " 
      + "Click on the arena or \"Generate New\" to create a new maze.";
 
 let raceTimer = 0;
