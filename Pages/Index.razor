@@ -90,9 +90,13 @@
         wallColorString = newMaze.wallColor.ToString();
         complexity = newMaze.complexity;
 
+        newMaze.PrintMazeToConsole();
+
         await JS.InvokeVoidAsync("setMaze",
             gridString, wallColorString, spaceColorString,
             complexity, "mainMazeSVG");
+
+        
 
         if (!firstMazeCreated)
         {
