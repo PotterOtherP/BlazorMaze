@@ -17,7 +17,18 @@ svg {
     margin: 5%;
 }
 
+.maze-grid-display {
 
+    font-family: 'Courier New', Courier, monospace;
+    font-size: larger;
+    font-weight: bolder;
+    background-color: white;
+    width: 30%;
+    text-align: center;
+    margin: 10px 16px;
+    border: 2px solid black;
+    min-width: 480px;
+}
 
 .maze-menu-button {
     margin-bottom: 10px;

@@ -1,78 +1,219 @@
 @page "/About"
 
-<h1>About This App</h1>
+<h1 style="margin-left: 16px;">About This App</h1>
 
-<p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Praesentium laborum voluptates 
-    architecto dolores provident dignissimos distinctio autem voluptatum repudiandae, enim 
-    saepe iusto necessitatibus, reprehenderit blanditiis eaque consequatur, illo quas magnam!</p>
+<article class="w3-panel w3-round w3-flat-clouds">This game is inspired by
+    a program that my dad had on his DOS work computer back in the 80's. All I
+    remember about it is that it would draw a maze on the screen, and then a colored
+    line would move through the maze at lightning speed until it was solved. With modern
+    computer speeds, I had to deliberately slow my version down so the movement would
+    be visible.
+
+    This app was built with .NET 5.0, Blazor Server, Entity Framework and SQL Server. The
+    idea was for the maze-generation algorithm to be the "business logic" which lives on
+    the server and gets called by the client. The animation is carried out in the
+    browser, since requesting one frame at a time from the server is inefficient. 
+</article>
 
 
-<h1>How It Works</h1>
+<h1 style="margin-top: 32px; margin-left: 16px;">How It Works</h1>
 
-<p>The program treats the concept of a maze as a rectangular grid of sections, each of which is 
+<article class="w3-panel w3-round w3-flat-clouds">The program treats the concept of a maze as a rectangular grid of sections, each of which is 
     either part of a wall or the background. When a new maze is created, the program chooses a
     darker color for the walls and a lighter color for the background. The maze pattern is then
     generated, starting with a grid of characters representing an empty maze with an entrance and
-    exit: <br> <br>
+    exit:
+</article>
 
-    <div style="font-family: 'Courier New', Courier, monospace;">
-     X X X X X X X X X - X X X X X X X X X X X <br>
-     X - - - - - - - - - - - - - - - - - - - X <br>
-     X - - - - - - - - - - - - - - - - - - - X <br>
-     X - - - - - - - - - - - - - - - - - - - X <br>
-     X - - - - - - - - - - - - - - - - - - - X <br>
-     X - - - - - - - - - - - - - - - - - - - X <br>
-     X - - - - - - - - - - - - - - - - - - - X <br>
-     X - - - - - - - - - - - - - - - - - - - X <br>
-     X - - - - - - - - - - - - - - - - - - - X <br>
-     X - - - - - - - - - - - - - - - - - - - X <br>
-     X - - - - - - - - - - - - - - - - - - - X <br>
-     X - - - - - - - - - - - - - - - - - - - X <br>
-     X - - - - - - - - - - - - - - - - - - - X <br>
-     X - - - - - - - - - - - - - - - - - - - X <br>
-     X X X X X X X X X X X X X - X X X X X X X <br> <br>
+    <div class="maze-grid-display">
+     X X X X X X X &nbsp; X X X X X X X X X X X X X <br>
+     X &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; X <br>
+     X &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; X <br>
+     X &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; X <br>
+     X &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; X <br>
+     X &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; X <br>
+     X &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; X <br>
+     X &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; X <br>
+     X &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; X <br>
+     X &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; X <br>
+     X &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; X <br>
+     X &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; X <br>
+     X &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; X <br>
+     X &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; X <br>
+     X X X X X X X X X X X X X &nbsp; X X X X X X X
      </div>
 
-     <div style="font-family: 'Courier New', Courier, monospace;">
-     X X X X X X X X X - X X X X X X X X X X X <br>
-     X - - - X - - - X - X - - - - - X - - - X <br>
-     X - - - - - - - - - - - - - - - - - - - X <br>
-     X - - - - - - - - - - - - - - - - - - - X <br>
-     X - - - - - - - - - - - - - - - - - - X X <br>
-     X - - - - - - - - - - - - - - - - - - - X <br>
-     X X - - - - - - - - - - - - - - - - - - X <br>
-     X - - - - - - - - - - - - - - - - - - - X <br>
-     X - - - - - - - - - - - - - - - - - - - X <br>
-     X - - - - - - - - - - - - - - - - - - - X <br>
-     X - - - - - - - - - - - - - - - - - - - X <br>
-     X - - - - - - - - - - - - - - - - - - - X <br>
-     X - - - - - - - - - - - - - - - - - - - X <br>
-     X - - - X - - - - - - - X - X - - - - - X <br>
-     X X X X X X X X X X X X X - X X X X X X X <br> <br>
+     <article class="w3-panel w3-round w3-flat-clouds">The program then selects spots along the outer wall to begin the walls
+         which will extend into the interior. There will always be interior walls
+         adjacent to the start and exit points.
+     </article>
+
+     <div class="maze-grid-display">
+     X X X X X X X &nbsp; X X X X X X X X X X X X X <br>
+     X &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; X &nbsp; X &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; X <br>
+     X &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; X <br>
+     X &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; X <br>
+     X X &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; X <br>
+     X &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; X <br>
+     X &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; X X <br>
+     X &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; X <br>
+     X X &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; X <br>
+     X &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; X <br>
+     X &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; X <br>
+     X &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; X <br>
+     X &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; X <br>
+     X &nbsp; X &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; X &nbsp; X &nbsp; &nbsp; X &nbsp; &nbsp; X <br>
+     X X X X X X X X X X X X X &nbsp; X X X X X X X
      </div>
 
-    <div style="font-family: 'Courier New', Courier, monospace;">
-     X X X X X X X X X - X X X X X X X X X X X <br>
-     X - - - X - - - X - X - - - - - X - - - X <br>
-     X - X X X - X - X - X - X X X X X - X - X <br>
-     X - - - X - X - X - X - X - - - - - X - X <br>
-     X - X - X X X - X - X - X - X X X - X X X <br>
-     X - X - - - - - X - X - - - X - - - - - X <br>
-     X X X X X X X - X - X - X X X - X X X - X <br>
-     X - - - - - X - X - X - X - - - - - X - X <br>
-     X - X X X - X - X - X - X - X X X X X - X <br>
-     X - X - X - - - X - X - X - X - X - - - X <br>
-     X - X - X - X X X - X - X - X - X - X - X <br>
-     X - X - X - X - - - - - X - X - X - X - X <br>
-     X - X - X - X X X X X - X - X - X X X - X <br>
-     X - - - X - - - - - - - X - X - - - - - X <br>
-     X X X X X X X X X X X X X - X X X X X X X <br> <br>
+     <article class="w3-panel w3-round w3-flat-clouds">Using an iterative algorithm, the walls are then extended into
+        the interior of the maze, branching and changing direction until
+        the maze is completely filled. Since all interior walls are attached
+        to the outer border walls, and are separated from each other by one space,
+        it's guaranteed that there will be exactly one path through the maze
+        from beginning to end.
+     </article>
+
+    <div class="maze-grid-display">
+     X X X X X X X &nbsp; X X X X X X X X X X X X X <br>
+     X &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; X &nbsp; X &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; X <br>
+     X &nbsp; X X X &nbsp; X &nbsp; X &nbsp; X X &nbsp; X X X X X X &nbsp; X <br>
+     X &nbsp; &nbsp; &nbsp; X &nbsp; X &nbsp; X &nbsp; X &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; X &nbsp; X <br>
+     X X X &nbsp; X &nbsp; X &nbsp; X &nbsp; X &nbsp; X X X X X &nbsp; X &nbsp; X <br>
+     X &nbsp; X &nbsp; X &nbsp; X &nbsp; X &nbsp; X &nbsp; X &nbsp; &nbsp; &nbsp; X &nbsp; X &nbsp; X <br>
+     X &nbsp; X &nbsp; X &nbsp; X &nbsp; X &nbsp; X &nbsp; X &nbsp; X X X &nbsp; X X X <br>
+     X &nbsp; &nbsp; &nbsp; X &nbsp; X &nbsp; X &nbsp; X &nbsp; &nbsp; &nbsp; X &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; X <br>
+     X X X X X &nbsp; X &nbsp; X &nbsp; X X X &nbsp; X &nbsp; X X X &nbsp; X <br>
+     X &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; X &nbsp; &nbsp; &nbsp; X &nbsp; X &nbsp; X &nbsp; X &nbsp; X <br>
+     X &nbsp; X X X X X X X &nbsp; X &nbsp; X &nbsp; X &nbsp; X &nbsp; X &nbsp; X <br>
+     X &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; X &nbsp; X &nbsp; X &nbsp; X &nbsp; X &nbsp; X <br>
+     X &nbsp; X X X X X X X X X &nbsp; X &nbsp; X &nbsp; X &nbsp; X &nbsp; X <br>
+     X &nbsp; X &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; X &nbsp; X &nbsp; &nbsp; &nbsp; X &nbsp; X <br>
+     X X X X X X X X X X X X X &nbsp; X X X X X X X
      </div>
-</p>
+
+     <article class="w3-panel w3-round w3-flat-clouds">
+         This pattern is generated by the C# code running on the server and returned
+         to the user's browser. The browser then executes JavaScript code to render the
+         pattern into graphics using SVG:
+     </article>
 
 
-<h1>Challenges</h1>
+     <svg
+        xmlns="http://www.w3.org/2000/svg"
+        xmlns:xlink="http://www.w3.org/1999/xlink"
+        viewBox="0 0 1204 900"
+        style="margin: 0px 16px; width: 50%; min-width: 480px;">
+     <rect x="0" y="0" width="1204" height="900" fill="#ffffff"></rect>
+     <rect x="0" y="0" width="401.33333333333337" height="60" fill="#39342F" rx="4"></rect>
+     <rect x="458.6666666666667" y="0" width="745.3333333333334" height="60" fill="#39342F" rx="4"></rect>
+     <rect x="114.66666666666667" y="120" width="172" height="60" fill="#39342F" rx="4"></rect>
+     <rect x="573.3333333333334" y="120" width="114.66666666666667" height="60" fill="#39342F" rx="4"></rect>
+     <rect x="745.3333333333334" y="120" width="344" height="60" fill="#39342F" rx="4"></rect>
+     <rect x="0" y="240" width="172" height="60" fill="#39342F" rx="4"></rect>
+     <rect x="688" y="240" width="286.6666666666667" height="60" fill="#39342F" rx="4"></rect>
+     <rect x="802.6666666666667" y="360" width="172" height="60" fill="#39342F" rx="4"></rect>
+     <rect x="1032" y="360" width="172" height="60" fill="#39342F" rx="4"></rect>
+     <rect x="0" y="480" width="286.6666666666667" height="60" fill="#39342F" rx="4"></rect>
+     <rect x="573.3333333333334" y="480" width="172" height="60" fill="#39342F" rx="4"></rect>
+     <rect x="917.3333333333334" y="480" width="172" height="60" fill="#39342F" rx="4"></rect>
+     <rect x="114.66666666666667" y="600" width="401.33333333333337" height="60" fill="#39342F" rx="4"></rect>
+     <rect x="114.66666666666667" y="720" width="516" height="60" fill="#39342F" rx="4"></rect>
+     <rect x="0" y="840" width="745.3333333333334" height="60" fill="#39342F" rx="4"></rect>
+     <rect x="802.6666666666667" y="840" width="401.33333333333337" height="60" fill="#39342F" rx="4"></rect>
+     <rect x="0" y="0" width="57.333333333333336" height="900" fill="#39342F" rx="4"></rect>
+     <rect x="114.66666666666667" y="240" width="57.333333333333336" height="180" fill="#39342F" rx="4"></rect>
+     <rect x="114.66666666666667" y="720" width="57.333333333333336" height="180" fill="#39342F" rx="4"></rect>
+     <rect x="229.33333333333334" y="120" width="57.333333333333336" height="420" fill="#39342F" rx="4"></rect>
+     <rect x="344" y="0" width="57.333333333333336" height="540" fill="#39342F" rx="4"></rect>
+     <rect x="458.6666666666667" y="0" width="57.333333333333336" height="660" fill="#39342F" rx="4"></rect>
+     <rect x="573.3333333333334" y="120" width="57.333333333333336" height="420" fill="#39342F" rx="4"></rect>
+     <rect x="573.3333333333334" y="600" width="57.333333333333336" height="180" fill="#39342F" rx="4"></rect>
+     <rect x="688" y="240" width="57.333333333333336" height="180" fill="#39342F" rx="4"></rect>
+     <rect x="688" y="480" width="57.333333333333336" height="420" fill="#39342F" rx="4"></rect>
+     <rect x="802.6666666666667" y="360" width="57.333333333333336" height="540" fill="#39342F" rx="4"></rect>
+     <rect x="917.3333333333334" y="240" width="57.333333333333336" height="180" fill="#39342F" rx="4"></rect>
+     <rect x="917.3333333333334" y="480" width="57.333333333333336" height="300" fill="#39342F" rx="4"></rect>
+     <rect x="1032" y="120" width="57.333333333333336" height="300" fill="#39342F" rx="4"></rect>
+     <rect x="1032" y="480" width="57.333333333333336" height="420" fill="#39342F" rx="4"></rect>
+     <rect x="1146.6666666666667" y="0" width="57.333333333333336" height="900" fill="#39342F" rx="4"></rect>
+     </svg>
 
-<p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Praesentium laborum voluptates 
-    architecto dolores provident dignissimos distinctio autem voluptatum repudiandae, enim 
-    saepe iusto necessitatibus, reprehenderit blanditiis eaque consequatur, illo quas magnam!</p>
+     <article class="w3-panel w3-round w3-flat-clouds">
+         The racing animations are also run in the browser with JavaScript.
+         The colored lines that "race" each other to solve the maze are each given
+         their own copy of the grid. The lines advance through the maze by following
+         a rule according to their color: a red line will turn left first at each
+         intersection, a blue line will turn right, and a green line will choose
+         randomly. When a dead end is reached, a line will retreat until it finds
+         an unexplored path.
+     </article>
+
+     <article class="w3-panel w3-round w3-flat-clouds">
+         When a user saves a maze, it's stored in a SQL Server database
+         located on Microsoft Azure. The data is modeled and transferred
+         with Entity Framework.
+     </article>
+
+
+<h1 style="margin-top: 32px; margin-left: 16px;">Challenges</h1>
+
+<article class="w3-panel w3-round w3-flat-clouds">
+    - When JavaScript executes an animation, it doesn't wait for the animation to finish
+    before moving on to the next line of code. This causes a problem when the effect you want
+    is created by a series of animations, each of which depends on the one that came before it.
+    The solution is simply to tell the code to time itself out long enough for each individual
+    animation to complete before the next one is calculated. Without this, the maze would be solved
+    before the "solver" line has a chance to draw itself in motion.
+</article>
+
+<article class="w3-panel w3-round w3-flat-clouds">
+    - It took a little digging to figure out exactly how to get EF Core to work with Blazor
+    Server. The best approach seems to be to create one DBContext for each individual transaction,
+    instead of trying to register one for the entire app when configuring services. To construct
+    a DBContext from a secret connection string, you need to inject a Configuration object into
+    the page with the line
+    <br><br><code>
+    @@inject IConfiguration Configuration;
+    </code><br><br>
+
+    Then you can call
+    <code>
+    Configuration.GetConnectionString().
+    </code>
+</article>
+
+<article class="w3-panel w3-round w3-flat-clouds">
+
+    - When the user deletes a saved maze or changes one of its colors, the code
+    needs to update the database AND re-render the page components at the same time.
+    This is accomplished by using lambda expressions to invoke component member functions
+    and using a callback to invoke a member function of the parent component.
+    <br><br>
+    For example: on the Saved Mazes page, each maze is displayed in a component called
+    MazeTableRow. The color picker input element in this row will invoke a MazeTableRow
+    member function when its value is changed:
+    <br><br><code>@@onchange="(ui) => UpdateColor(ui.Value.ToString())"</code><br><br>
+
+    The lambda expression format is necessary to pass parameters to the function.<br><br>
+
+    Meanwhile, the <code>UpdateColor()</code> function, in addition to making a change to the
+    database, will invoke a callback function in the parent component that re-renders the table
+    so it immediately reflects the changes that have been made.
+    <br>
+    The MazeTableRow component has an EventCallback property:
+    <br><br><code>
+    [Parameter]<br>
+    public EventCallback OnClickCallback { get; set; }
+    </code><br><br>
+    This property is invoked as follows:
+    <br><br><code>
+    private async void UpdateColor() {<br>
+    ...<br>
+    await OnClickCallback.InvokeAsync();<br>
+    }<br>
+    </code><br><br>
+
+    The invoked function in the parent component queries the database and retrieves
+    the data that has just been updated.
+</article>
