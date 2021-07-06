@@ -531,7 +531,12 @@ function terminateRace() {
 
     sol = null;
     sol2 = null;
-    document.getElementById("button_solve").removeAttribute("disabled");
+
+    var el = document.getElementById("button_solve");
+
+    if (el !== null)
+        el.removeAttribute("disabled");
+
 
 }
 
