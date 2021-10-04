@@ -63,7 +63,8 @@ else
 
     protected override async Task OnInitializedAsync()
     {
-        await JS.InvokeVoidAsync("terminateRace");
+        
+        // await JS.InvokeVoidAsync("terminateRace");
         
         using (var context = getNewContext())
         {
@@ -77,6 +78,12 @@ else
             }
             
         }
+
+    }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender) {
+
+        await JS.InvokeVoidAsync("terminateRace");
 
     }
 
