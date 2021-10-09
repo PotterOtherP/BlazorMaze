@@ -510,10 +510,21 @@ function setMaze(gridString, wallColorString, spaceColorString, complexity, svgI
             Maze.startY = 0;
         }
 
+        // Exit on bottom
         if (Maze.grid[Maze.rows - 1][i] == CH_SPACE)
         {
             Maze.exitX = i;
             Maze.exitY = Maze.rows - 1;
+        }
+    }
+
+    // Exit on right
+    for (var j = 0; j < Maze.grid.length; ++j)
+    {
+        if (Maze.grid[j][Maze.columns - 1] == CH_SPACE)
+        {
+            Maze.exitX = Maze.columns - 1;
+            Maze.exitY = j;
         }
     }
 

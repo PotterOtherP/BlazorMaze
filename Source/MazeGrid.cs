@@ -29,6 +29,8 @@ public class MazeGrid
     public int exitY;
     public Random rand;
 
+    public bool exitOnRight;
+
     public char[,] grid { get; }
     public ColorRGB wallColor { get; set; }
     public ColorRGB spaceColor { get; set; }
@@ -54,6 +56,9 @@ public class MazeGrid
         grid = new char[rows, columns];
         paths = new List<MazePath>();
         branches = new List<MazePath>();
+
+        this.exitOnRight = rand.Next(2) == 1 ? true : false;
+        Console.WriteLine($"Exit on right: {exitOnRight}");
 
         InitMaze();
         GenerateMaze();
@@ -144,13 +149,16 @@ public class MazeGrid
         int pathX = this.wall_right - 1;
         int pathY = rand.Next(2) * 2 + 4;
 
-        AddPath(pathX, pathY, Direction.LEFT);
+        if (Math.Abs(exitY - pathY) > 3)
+        {
+            AddPath(pathX, pathY, Direction.LEFT);
+        }
 
         for (var i = pathY; i <= this.wall_bottom - 3; i += 4)
         {
             int roll = rand.Next(2);
 
-            if (roll == 1)
+            if (roll == 1 && Math.Abs(exitY - i) > 3)
             {
                 AddPath(pathX, i, Direction.LEFT);
             }
@@ -276,27 +284,64 @@ public class MazeGrid
             }
         }
 
+        if (exitOnRight)
+        {
+            startX = rand.Next((columns - 6) / 2) * 2 + 3;
+            exitX = wall_right;
 
+            startY = wall_top;
+            exitY = rand.Next((rows - 4) / 2) * 2 + 3;
 
-        startX = rand.Next((columns - 6) / 2) * 2 + 3;
-        exitX = rand.Next((columns - 6) / 2) * 2 + 3;
+            if (startX > this.columns / 2)
+                startX = startX - (int)Math.Floor(this.columns / 2.0);
 
-        if (startX > this.columns / 2)
-            startX = startX - (int)Math.Floor(this.columns / 2.0);
+            // if (exitY < this.rows / 4)
+                // exitY = exitY + (int)Math.Floor(this.rows / 2.0);
 
-        if (exitX < this.columns / 2)
-            exitX = exitX + (int)Math.Floor(this.columns / 2.0);
+            if (wall_bottom - exitY <= 2)
+                --exitY;
 
-        grid[wall_top, startX] = CH_SPACE;
-        grid[wall_bottom, exitX] = CH_SPACE;
+            if (exitY - wall_top <= 2)
+                ++exitY;
 
-        startPoint = new GridPoint(startX, wall_top);
-        exitPoint = new GridPoint(exitX, wall_bottom);
+            grid[wall_top, startX] = CH_SPACE;
+            grid[exitY, wall_right] = CH_SPACE;
 
-        AddPath(startPoint.x - 1, startPoint.y + 1, Direction.DOWN);
-        AddPath(startPoint.x + 1, startPoint.y + 1, Direction.DOWN);
-        AddPath(exitPoint.x - 1, exitPoint.y - 1, Direction.UP);
-        AddPath(exitPoint.x + 1, exitPoint.y - 1, Direction.UP);
+            startPoint = new GridPoint(startX, wall_top);
+            exitPoint = new GridPoint(wall_right, exitY);
+
+            AddPath(startPoint.x - 1, startPoint.y + 1, Direction.DOWN);
+            AddPath(startPoint.x + 1, startPoint.y + 1, Direction.DOWN);
+            AddPath(exitPoint.x - 1, exitPoint.y + 1, Direction.LEFT);
+            AddPath(exitPoint.x - 1, exitPoint.y - 1, Direction.LEFT);
+
+            Console.WriteLine($"Start point: {startPoint.x}, {startPoint.y}");
+            Console.WriteLine($"Exit point: {exitPoint.x}, {exitPoint.y}");
+        }
+
+        else
+        {
+            startX = rand.Next((columns - 6) / 2) * 2 + 3;
+            exitX = rand.Next((columns - 6) / 2) * 2 + 3;
+
+            if (startX > this.columns / 2)
+                startX = startX - (int)Math.Floor(this.columns / 2.0);
+
+            if (exitX < this.columns / 2)
+                exitX = exitX + (int)Math.Floor(this.columns / 2.0);
+
+            grid[wall_top, startX] = CH_SPACE;
+            grid[wall_bottom, exitX] = CH_SPACE;
+
+            startPoint = new GridPoint(startX, wall_top);
+            exitPoint = new GridPoint(exitX, wall_bottom);
+
+            AddPath(startPoint.x - 1, startPoint.y + 1, Direction.DOWN);
+            AddPath(startPoint.x + 1, startPoint.y + 1, Direction.DOWN);
+            AddPath(exitPoint.x - 1, exitPoint.y - 1, Direction.UP);
+            AddPath(exitPoint.x + 1, exitPoint.y - 1, Direction.UP);
+        }
+
 
         startX = startPoint.x;
         startY = startPoint.y;
@@ -348,6 +393,8 @@ public class MazeGrid
 
     private bool PathIsClear(GridPoint pt, Direction dir)
     {
+        // return true;
+
         int checkX = Math.Max(wall_left, pt.x);
         int checkY = Math.Max(wall_top, pt.y);
 
