@@ -58,7 +58,6 @@ public class MazeGrid
         branches = new List<MazePath>();
 
         this.exitOnRight = rand.Next(2) == 1 ? true : false;
-        Console.WriteLine($"Exit on right: {exitOnRight}");
 
         InitMaze();
         GenerateMaze();
@@ -295,9 +294,6 @@ public class MazeGrid
             if (startX > this.columns / 2)
                 startX = startX - (int)Math.Floor(this.columns / 2.0);
 
-            // if (exitY < this.rows / 4)
-                // exitY = exitY + (int)Math.Floor(this.rows / 2.0);
-
             if (wall_bottom - exitY <= 2)
                 --exitY;
 
@@ -315,8 +311,6 @@ public class MazeGrid
             AddPath(exitPoint.x - 1, exitPoint.y + 1, Direction.LEFT);
             AddPath(exitPoint.x - 1, exitPoint.y - 1, Direction.LEFT);
 
-            Console.WriteLine($"Start point: {startPoint.x}, {startPoint.y}");
-            Console.WriteLine($"Exit point: {exitPoint.x}, {exitPoint.y}");
         }
 
         else
@@ -393,8 +387,6 @@ public class MazeGrid
 
     private bool PathIsClear(GridPoint pt, Direction dir)
     {
-        // return true;
-
         int checkX = Math.Max(wall_left, pt.x);
         int checkY = Math.Max(wall_top, pt.y);
 
